@@ -20,6 +20,24 @@ STAT_FIELDS = [stat for stats in CATEGORIES.values() for stat in stats]
 
 # The four coarse Positions a Character can be assigned to (see CONTEXT.md).
 POSITIONS = ["goalkeeper", "defence", "midfield", "attack"]
+GOALKEEPER = "goalkeeper"
+TEAM_SIZE = 11
+
+
+def team_tally(positions: list[str]) -> dict[str, int]:
+    """Count of filled Placements per Position."""
+    return {pos: positions.count(pos) for pos in POSITIONS}
+
+
+def team_issues(positions: list[str]) -> list[str]:
+    """Human-readable reasons a Team isn't complete; empty means complete."""
+    issues = []
+    if len(positions) != TEAM_SIZE:
+        issues.append(f"{len(positions)}/{TEAM_SIZE} slots filled")
+    gk = positions.count(GOALKEEPER)
+    if gk != 1:
+        issues.append(f"{gk} goalkeepers (need exactly 1)")
+    return issues
 
 # First-pass default weights per Position over the Stats that matter for it.
 # Relative magnitudes only — Fit normalizes by their sum, so these need not add

@@ -6,15 +6,19 @@ from models import (
     MAX_RATING,
     OVERALL_VIEW,
     POSITIONS,
+    TEAM_SIZE,
     Player,
     load_players,
     load_position_weights,
+    team_issues,
+    team_tally,
     update_player,
     update_position_weights,
 )
 
 RATING_STEP = 0.5
 WEIGHT_STEP = 0.5
+EMPTY_SLOT = "— empty —"
 
 
 def compare_page(players: dict[str, Player]) -> None:
@@ -122,15 +126,68 @@ def weights_page() -> None:
         st.success(f"Saved weights for {pretty(position)}.")
 
 
+def team_builder_page(players: dict[str, Player]) -> None:
+    st.title("Ultimate XI — Team Builder")
+    st.caption("Fill 11 slots. Assign each a Position. Exactly one Goalkeeper. "
+               "A Character can only appear once.")
+
+    names = sorted(players.keys())
+    weights = load_position_weights()
+    default_pos = POSITIONS.index("midfield")
+    header = st.container()  # tally + validity, filled in after the slots
+
+    if st.button("Clear team"):
+        for i in range(TEAM_SIZE):
+            st.session_state.pop(f"slot_{i}_char", None)
+            st.session_state.pop(f"slot_{i}_pos", None)
+        st.rerun()
+
+    chosen = [st.session_state.get(f"slot_{i}_char", EMPTY_SLOT) for i in range(TEAM_SIZE)]
+    placements: list[tuple[str, str]] = []
+    for i in range(TEAM_SIZE):
+        taken_elsewhere = {chosen[j] for j in range(TEAM_SIZE) if j != i} - {EMPTY_SLOT}
+        options = [EMPTY_SLOT] + [n for n in names if n not in taken_elsewhere]
+        c_char, c_pos, c_fit = st.columns([3, 2, 2])
+        char = c_char.selectbox(
+            f"Slot {i + 1}", options, key=f"slot_{i}_char",
+            format_func=lambda n: n if n == EMPTY_SLOT else pretty(n),
+        )
+        pos = c_pos.selectbox(
+            "Position", POSITIONS, index=default_pos, key=f"slot_{i}_pos",
+            format_func=pretty,
+        )
+        if char != EMPTY_SLOT:
+            placements.append((char, pos))
+            c_fit.metric("Fit", f"{players[char].fit(weights[pos]):.2f}")
+
+    positions = [pos for _, pos in placements]
+    tally = team_tally(positions)
+    issues = team_issues(positions)
+    with header:
+        st.markdown(" · ".join(
+            f"**{pretty(pos)[:3]}** {tally[pos]}" for pos in POSITIONS
+        ))
+        if issues:
+            st.warning("Not complete — " + "; ".join(issues))
+        else:
+            st.success("Complete team ✓")
+
+
 def main() -> None:
     st.set_page_config(page_title="Ultimate XI", layout="wide")
     players = load_players()
 
     with st.sidebar:
-        page = st.radio("Page", ["Compare", "Edit ratings", "Edit weights"], index=0)
+        page = st.radio(
+            "Page",
+            ["Compare", "Team builder", "Edit ratings", "Edit weights"],
+            index=0,
+        )
 
     if page == "Compare":
         compare_page(players)
+    elif page == "Team builder":
+        team_builder_page(players)
     elif page == "Edit ratings":
         edit_page(players)
     else:

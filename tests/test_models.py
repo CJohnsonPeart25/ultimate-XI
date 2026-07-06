@@ -54,6 +54,27 @@ def test_fit_with_zero_weights_is_zero():
     assert make_player().fit({}) == 0.0
 
 
+def test_team_issues_flags_incomplete_and_gk_count():
+    assert models.team_issues([]) != []
+    assert "0/11" in " ".join(models.team_issues([]))
+    eleven_no_gk = ["defence"] * 11
+    assert any("goalkeeper" in i for i in models.team_issues(eleven_no_gk))
+    two_gk = ["goalkeeper", "goalkeeper"] + ["midfield"] * 9
+    assert any("2 goalkeeper" in i for i in models.team_issues(two_gk))
+
+
+def test_team_issues_empty_when_complete():
+    positions = ["goalkeeper"] + ["defence"] * 4 + ["midfield"] * 4 + ["attack"] * 2
+    assert len(positions) == 11
+    assert models.team_issues(positions) == []
+
+
+def test_team_tally_counts_per_position():
+    positions = ["goalkeeper", "defence", "defence", "attack"]
+    tally = models.team_tally(positions)
+    assert tally == {"goalkeeper": 1, "defence": 2, "midfield": 0, "attack": 1}
+
+
 def test_update_position_weights_roundtrip(tmp_path, monkeypatch):
     engine = create_engine(f"sqlite:///{tmp_path / 'w.db'}")
     SQLModel.metadata.create_all(engine)
