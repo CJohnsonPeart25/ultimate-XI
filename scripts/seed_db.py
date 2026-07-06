@@ -12,7 +12,7 @@ from sqlmodel import Session
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from models import Player, engine, init_db  # noqa: E402
+from models import Player, engine, init_db, seed_position_weights  # noqa: E402
 
 SEED_FILE = Path(__file__).resolve().parent.parent / "seed.yaml"
 
@@ -33,7 +33,10 @@ def main() -> None:
             session.merge(Player(name=name, link_up_partners=partners, **stat_values))
         session.commit()
 
-    print(f"Seeded {len(characters)} players into {engine.url.database}")
+    seed_position_weights()
+
+    print(f"Seeded {len(characters)} players and Position weights "
+          f"into {engine.url.database}")
 
 
 if __name__ == "__main__":

@@ -1,9 +1,20 @@
 import streamlit as st
 
 from chart import build_radar, pretty
-from models import CATEGORIES, MAX_RATING, OVERALL_VIEW, Player, load_players, update_player
+from models import (
+    CATEGORIES,
+    MAX_RATING,
+    OVERALL_VIEW,
+    POSITIONS,
+    Player,
+    load_players,
+    load_position_weights,
+    update_player,
+    update_position_weights,
+)
 
 RATING_STEP = 0.5
+WEIGHT_STEP = 0.5
 
 
 def compare_page(players: dict[str, Player]) -> None:
@@ -29,6 +40,8 @@ def compare_page(players: dict[str, Player]) -> None:
     st.plotly_chart(build_radar(players, selected, view),
                     use_container_width=True)
 
+    weights = load_position_weights()
+
     st.subheader("Ratings")
     cols = st.columns(len(selected))
     for col, name in zip(cols, selected):
@@ -38,6 +51,10 @@ def compare_page(players: dict[str, Player]) -> None:
             st.metric("Overall", f"{player.overall:.2f}")
             for cat in CATEGORIES:
                 st.caption(f"{pretty(cat)}-Overall: {player.category_overall(cat):.2f}")
+            fits = " · ".join(
+                f"{pretty(pos)[:3]} {player.fit(weights[pos]):.2f}" for pos in POSITIONS
+            )
+            st.caption(f"Fit — {fits}")
 
 
 def edit_page(players: dict[str, Player]) -> None:
@@ -75,17 +92,49 @@ def edit_page(players: dict[str, Player]) -> None:
         st.success(f"Saved ratings for {pretty(name)}.")
 
 
+def weights_page() -> None:
+    st.title("Ultimate XI — Edit Position Weights")
+    st.caption(
+        "Relative importance of each stat for a Position. Magnitudes are free — "
+        "Fit normalizes by their sum. Higher = matters more."
+    )
+
+    weights = load_position_weights()
+    position = st.selectbox("Position", POSITIONS, format_func=pretty)
+    current = weights[position]
+
+    with st.form("edit_weights", clear_on_submit=False):
+        new_weights: dict[str, float] = {}
+        stats = sorted(current, key=lambda s: current[s], reverse=True)
+        cols = st.columns(3)
+        for i, stat in enumerate(stats):
+            new_weights[stat] = cols[i % 3].number_input(
+                pretty(stat),
+                min_value=0.0,
+                step=WEIGHT_STEP,
+                value=float(current[stat]),
+                key=f"weight_{position}_{stat}",
+            )
+        submitted = st.form_submit_button("Save", type="primary")
+
+    if submitted:
+        update_position_weights(position, new_weights)
+        st.success(f"Saved weights for {pretty(position)}.")
+
+
 def main() -> None:
     st.set_page_config(page_title="Ultimate XI", layout="wide")
     players = load_players()
 
     with st.sidebar:
-        page = st.radio("Page", ["Compare", "Edit ratings"], index=0)
+        page = st.radio("Page", ["Compare", "Edit ratings", "Edit weights"], index=0)
 
     if page == "Compare":
         compare_page(players)
-    else:
+    elif page == "Edit ratings":
         edit_page(players)
+    else:
+        weights_page()
 
 
 if __name__ == "__main__":

@@ -18,6 +18,32 @@ CATEGORIES: dict[str, list[str]] = {
 }
 STAT_FIELDS = [stat for stats in CATEGORIES.values() for stat in stats]
 
+# The four coarse Positions a Character can be assigned to (see CONTEXT.md).
+POSITIONS = ["goalkeeper", "defence", "midfield", "attack"]
+
+# First-pass default weights per Position over the Stats that matter for it.
+# Relative magnitudes only — Fit normalizes by their sum, so these need not add
+# to anything. Omitted Stats (and all hidden Stats) simply do not contribute.
+# Tunable in-app via the weights editor.
+DEFAULT_POSITION_WEIGHTS: dict[str, dict[str, float]] = {
+    "goalkeeper": {
+        "reflexes": 10, "positioning_gk": 8, "handling": 7,
+        "distribution": 4, "agility": 3, "composure": 3,
+    },
+    "defence": {
+        "tackling": 9, "interceptions": 9, "strength": 7, "positioning": 7,
+        "aggression": 5, "pace": 4, "composure": 4, "passing": 3,
+    },
+    "midfield": {
+        "passing": 9, "vision": 8, "stamina": 8, "dribbling": 6, "composure": 6,
+        "interceptions": 5, "positioning": 5, "tackling": 4, "pace": 3,
+    },
+    "attack": {
+        "shooting": 9, "pace": 7, "dribbling": 7, "positioning": 7,
+        "composure": 5, "agility": 5, "passing": 4, "vision": 4,
+    },
+}
+
 # The radar "view" that plots category averages instead of a single category's stats.
 OVERALL_VIEW = "Overall"
 
@@ -70,6 +96,19 @@ class Player(SQLModel, table=True):
             return [self.category_overall(cat) for cat in CATEGORIES]
         return [getattr(self, stat) for stat in CATEGORIES[view]]
 
+    def fit(self, weights: dict[str, float]) -> float:
+        """Positional Fit: normalized weighted blend of Stats, on the 0-5 scale."""
+        total = sum(weights.values())
+        if total == 0:
+            return 0.0
+        return sum(getattr(self, stat) * w for stat, w in weights.items()) / total
+
+
+class PositionWeight(SQLModel, table=True):
+    position: str = Field(primary_key=True)
+    stat: str = Field(primary_key=True)
+    weight: float
+
 
 engine = create_engine(
     f"sqlite:///{DB_PATH}",
@@ -105,4 +144,38 @@ def update_player(name: str, stat_values: dict[str, float],
             setattr(player, field, value)
         player.link_up_partners = link_up_partners
         session.add(player)
+        session.commit()
+
+
+def seed_position_weights() -> None:
+    """Insert the default Position weights for any (position, stat) not yet present."""
+    init_db()
+    with Session(engine) as session:
+        for position, weights in DEFAULT_POSITION_WEIGHTS.items():
+            for stat, weight in weights.items():
+                if session.get(PositionWeight, (position, stat)) is None:
+                    session.add(PositionWeight(position=position, stat=stat,
+                                               weight=float(weight)))
+        session.commit()
+
+
+def load_position_weights() -> dict[str, dict[str, float]]:
+    """Return {position: {stat: weight}} for all four Positions."""
+    weights: dict[str, dict[str, float]] = {pos: {} for pos in POSITIONS}
+    with Session(engine) as session:
+        for row in session.exec(select(PositionWeight)).all():
+            weights.setdefault(row.position, {})[row.stat] = row.weight
+    return weights
+
+
+def update_position_weights(position: str, weights: dict[str, float]) -> None:
+    """Persist edited weights for one Position in a single transaction."""
+    with Session(engine) as session:
+        for stat, weight in weights.items():
+            row = session.get(PositionWeight, (position, stat))
+            if row is None:
+                row = PositionWeight(position=position, stat=stat, weight=weight)
+            else:
+                row.weight = weight
+            session.add(row)
         session.commit()

@@ -2,7 +2,7 @@ import pytest
 from sqlmodel import Session, SQLModel, create_engine
 
 import models
-from models import CATEGORIES, STAT_FIELDS, Player
+from models import CATEGORIES, POSITIONS, STAT_FIELDS, Player, PositionWeight
 
 
 def make_player(name: str = "test", **overrides) -> Player:
@@ -34,6 +34,38 @@ def test_axis_values_for_overall_returns_category_averages():
     assert len(values) == len(CATEGORIES)
     assert values[0] == pytest.approx(2.5)  # physical
     assert values[2] == pytest.approx(3.0)  # mental
+
+
+def test_fit_is_normalized_weighted_blend():
+    player = make_player(reflexes=5.0, handling=1.0)
+    # weights need not sum to 1; Fit divides by their sum.
+    fit = player.fit({"reflexes": 3.0, "handling": 1.0})
+    assert fit == pytest.approx((5.0 * 3 + 1.0 * 1) / 4)
+
+
+def test_fit_uses_only_weighted_stats():
+    # Only stats present in the weights dict move Fit; everything else (including
+    # hidden stats, which default weights never include) is ignored.
+    player = make_player(shooting=5.0, consistency=1.0)
+    assert player.fit({"shooting": 1.0}) == pytest.approx(5.0)
+
+
+def test_fit_with_zero_weights_is_zero():
+    assert make_player().fit({}) == 0.0
+
+
+def test_update_position_weights_roundtrip(tmp_path, monkeypatch):
+    engine = create_engine(f"sqlite:///{tmp_path / 'w.db'}")
+    SQLModel.metadata.create_all(engine)
+    monkeypatch.setattr(models, "engine", engine)
+
+    models.seed_position_weights()
+    seeded = models.load_position_weights()
+    assert set(seeded) == set(POSITIONS)
+    assert seeded["goalkeeper"]["reflexes"] > 0
+
+    models.update_position_weights("goalkeeper", {"reflexes": 99.0})
+    assert models.load_position_weights()["goalkeeper"]["reflexes"] == pytest.approx(99.0)
 
 
 def test_update_player_roundtrip(tmp_path, monkeypatch):
