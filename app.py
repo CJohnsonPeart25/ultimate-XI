@@ -1,11 +1,8 @@
-from pathlib import Path
-
 import plotly.graph_objects as go
 import streamlit as st
-import yaml
 
-DATA_FILE = Path(__file__).parent / "player_stats.yaml"
-NON_STAT_KEYS = {"synergies"}
+from models import CATEGORIES, load_characters
+
 MAX_RATING = 5.0
 
 # Distinct hues; each player gets one, with a translucent fill for the FIFA look.
@@ -14,22 +11,6 @@ PALETTE = [
     "#42d4f4", "#f032e6", "#bfef45", "#fabed4", "#469990",
     "#dcbeff", "#9A6324", "#800000", "#808000", "#000075",
 ]
-
-
-@st.cache_data
-def load_data() -> dict:
-    with DATA_FILE.open(encoding="utf-8") as fh:
-        return yaml.safe_load(fh)["characters"]
-
-
-def stat_categories(characters: dict) -> dict[str, list[str]]:
-    """Map each category -> ordered list of its stat names, from the first char."""
-    sample = next(iter(characters.values()))
-    return {
-        cat: list(stats.keys())
-        for cat, stats in sample.items()
-        if cat not in NON_STAT_KEYS and isinstance(stats, dict)
-    }
 
 
 def category_overall(char: dict, category: str) -> float:
@@ -97,8 +78,8 @@ def main() -> None:
     st.set_page_config(page_title="Ultimate XI", layout="wide")
     st.title("Ultimate XI — Stat Comparison")
 
-    characters = load_data()
-    categories = stat_categories(characters)
+    characters = load_characters()
+    categories = CATEGORIES
     view_options = ["Overall"] + [c.replace("_", " ").title() for c in categories]
     label_to_key = {c.replace("_", " ").title(): c for c in categories}
 

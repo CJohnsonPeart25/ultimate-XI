@@ -7,5 +7,6 @@ requires-python = ">=3.14"
 dependencies = [
     "plotly>=6.8.0",
     "pyyaml>=6.0.3",
+    "sqlmodel>=0.0.39",
     "streamlit>=1.58.0",
 ]

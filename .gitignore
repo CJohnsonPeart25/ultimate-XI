@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# SQLite database (seed from seed.yaml via scripts/seed_db.py)
+*.db
+*.db-wal
+*.db-shm
