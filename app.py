@@ -15,6 +15,7 @@ from models import (
     update_player,
     update_position_weights,
 )
+from team import Placement, TeamDoc, team_validation_errors
 
 RATING_STEP = 0.5
 WEIGHT_STEP = 0.5
@@ -126,12 +127,43 @@ def weights_page() -> None:
         st.success(f"Saved weights for {pretty(position)}.")
 
 
+def _apply_team_doc(doc: TeamDoc) -> None:
+    """Load an imported Team into the builder's slot widgets, then rerun."""
+    for i in range(TEAM_SIZE):
+        if i < len(doc.placements):
+            st.session_state[f"slot_{i}_char"] = doc.placements[i].character
+            st.session_state[f"slot_{i}_pos"] = doc.placements[i].position
+        else:
+            st.session_state.pop(f"slot_{i}_char", None)
+            st.session_state.pop(f"slot_{i}_pos", None)
+    st.session_state["team_name"] = doc.name
+    st.rerun()
+
+
 def team_builder_page(players: dict[str, Player]) -> None:
     st.title("Ultimate XI — Team Builder")
     st.caption("Fill 11 slots. Assign each a Position. Exactly one Goalkeeper. "
                "A Character can only appear once.")
 
     names = sorted(players.keys())
+
+    # Import must run before the slot/name widgets are instantiated this run.
+    with st.expander("Import a team from JSON"):
+        uploaded = st.file_uploader("Team JSON", type="json", key="team_upload")
+        if uploaded is not None and st.button("Load team"):
+            try:
+                doc = TeamDoc.model_validate_json(uploaded.getvalue())
+            except ValueError as exc:
+                st.error(f"Could not parse JSON: {exc}")
+            else:
+                errors = team_validation_errors(doc, set(names))
+                if errors:
+                    st.error("Invalid team — " + "; ".join(errors))
+                else:
+                    _apply_team_doc(doc)
+
+    st.text_input("Team name", key="team_name")
+
     weights = load_position_weights()
     default_pos = POSITIONS.index("midfield")
     header = st.container()  # tally + validity, filled in after the slots
@@ -171,6 +203,19 @@ def team_builder_page(players: dict[str, Player]) -> None:
             st.warning("Not complete — " + "; ".join(issues))
         else:
             st.success("Complete team ✓")
+
+    name = st.session_state.get("team_name", "")
+    doc = TeamDoc(
+        name=name,
+        placements=[Placement(character=c, position=p) for c, p in placements],
+    )
+    st.download_button(
+        "Export team JSON",
+        data=doc.model_dump_json(indent=2),
+        file_name=f"{name or 'team'}.json",
+        mime="application/json",
+        disabled=not placements,
+    )
 
 
 def main() -> None:
