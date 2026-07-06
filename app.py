@@ -148,11 +148,11 @@ def team_builder_page(players: dict[str, Player]) -> None:
     names = sorted(players.keys())
 
     # Import must run before the slot/name widgets are instantiated this run.
-    with st.expander("Import a team from JSON"):
-        uploaded = st.file_uploader("Team JSON", type="json", key="team_upload")
-        if uploaded is not None and st.button("Load team"):
+    with st.expander("Import a team (paste JSON)"):
+        pasted = st.text_area("Team JSON", key="team_paste", height=150)
+        if st.button("Load team") and pasted.strip():
             try:
-                doc = TeamDoc.model_validate_json(uploaded.getvalue())
+                doc = TeamDoc.model_validate_json(pasted)
             except ValueError as exc:
                 st.error(f"Could not parse JSON: {exc}")
             else:
@@ -204,18 +204,13 @@ def team_builder_page(players: dict[str, Player]) -> None:
         else:
             st.success("Complete team ✓")
 
-    name = st.session_state.get("team_name", "")
-    doc = TeamDoc(
-        name=name,
-        placements=[Placement(character=c, position=p) for c, p in placements],
-    )
-    st.download_button(
-        "Export team JSON",
-        data=doc.model_dump_json(indent=2),
-        file_name=f"{name or 'team'}.json",
-        mime="application/json",
-        disabled=not placements,
-    )
+    if placements:
+        doc = TeamDoc(
+            name=st.session_state.get("team_name", ""),
+            placements=[Placement(character=c, position=p) for c, p in placements],
+        )
+        st.markdown("**Export** — copy this JSON to share or save:")
+        st.code(doc.model_dump_json(indent=2), language="json")
 
 
 def main() -> None:
