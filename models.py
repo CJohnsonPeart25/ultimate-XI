@@ -5,6 +5,8 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 DB_PATH = Path(__file__).parent / "ultimate_xi.db"
 
+MAX_RATING = 5.0
+
 # Source of truth for how stats group into pentagon categories. The app and the
 # seed script both read this, so column names below must match these entries.
 CATEGORIES: dict[str, list[str]] = {
