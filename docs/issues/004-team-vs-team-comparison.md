@@ -21,12 +21,12 @@ throwaway. See docs/research/team-comparison-methods.md.
 
 ## Acceptance criteria
 
-- [ ] Decision recorded: ship S1 baseline, target M1 (this issue = S1)
-- [ ] Two complete Teams can be loaded (pasted JSON, validated; incomplete teams rejected clearly)
-- [ ] Per-Position mean Fit computed for each Team, plus an overall mean
-- [ ] The two Teams are overlaid on a four-Position radar
-- [ ] A per-Position table shows both Teams and the difference
-- [ ] Tests cover the per-Position mean and overall-mean computations
+- [x] Decision recorded: ship S1 baseline, target M1 (this issue = S1)
+- [x] Two complete Teams can be loaded (pasted JSON, validated; incomplete teams rejected clearly)
+- [x] Per-Position mean Fit computed for each Team, plus an overall mean
+- [x] The two Teams are overlaid on a four-Position radar
+- [x] A per-Position table shows both Teams and the difference
+- [x] Tests cover the per-Position mean and overall-mean computations
 
 ## Blocked by
 

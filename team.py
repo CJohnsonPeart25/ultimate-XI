@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from models import POSITIONS, team_issues
+from models import POSITIONS, Player, team_issues
 
 
 class Placement(BaseModel):
@@ -35,3 +35,21 @@ def team_validation_errors(doc: TeamDoc, known_characters: set[str]) -> list[str
         errors.append(f"unknown characters: {', '.join(unknown)}")
 
     return errors
+
+
+def position_mean_fits(doc: TeamDoc, players: dict[str, Player],
+                       weights: dict[str, dict[str, float]]) -> dict[str, float]:
+    """Mean Fit of the Placements assigned to each Position (0.0 if none)."""
+    means: dict[str, float] = {}
+    for pos in POSITIONS:
+        fits = [players[p.character].fit(weights[pos])
+                for p in doc.placements if p.position == pos]
+        means[pos] = sum(fits) / len(fits) if fits else 0.0
+    return means
+
+
+def overall_mean_fit(doc: TeamDoc, players: dict[str, Player],
+                     weights: dict[str, dict[str, float]]) -> float:
+    """Mean Fit across all Placements, each at its assigned Position."""
+    fits = [players[p.character].fit(weights[p.position]) for p in doc.placements]
+    return sum(fits) / len(fits) if fits else 0.0

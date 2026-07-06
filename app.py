@@ -1,6 +1,6 @@
 import streamlit as st
 
-from chart import build_radar, pretty
+from chart import build_radar, build_team_radar, pretty
 from models import (
     CATEGORIES,
     MAX_RATING,
@@ -15,7 +15,13 @@ from models import (
     update_player,
     update_position_weights,
 )
-from team import Placement, TeamDoc, team_validation_errors
+from team import (
+    Placement,
+    TeamDoc,
+    overall_mean_fit,
+    position_mean_fits,
+    team_validation_errors,
+)
 
 RATING_STEP = 0.5
 WEIGHT_STEP = 0.5
@@ -213,6 +219,67 @@ def team_builder_page(players: dict[str, Player]) -> None:
         st.code(doc.model_dump_json(indent=2), language="json")
 
 
+def _load_team_input(container, label: str, key: str,
+                     known: set[str]) -> TeamDoc | None:
+    text = container.text_area(f"{label} JSON", key=key, height=170)
+    if not text.strip():
+        container.info(f"Paste {label} (copy it from the Team Builder's Export).")
+        return None
+    try:
+        doc = TeamDoc.model_validate_json(text)
+    except ValueError as exc:
+        container.error(f"{label}: could not parse JSON — {exc}")
+        return None
+    errors = team_validation_errors(doc, known)
+    if errors:
+        container.error(f"{label} invalid — " + "; ".join(errors))
+        return None
+    return doc
+
+
+def compare_teams_page(players: dict[str, Player]) -> None:
+    st.title("Ultimate XI — Team vs Team")
+    st.caption("Baseline comparison: per-Position mean Fit + overall. "
+               "Paste two complete teams.")
+
+    known = set(players)
+    weights = load_position_weights()
+
+    col_a, col_b = st.columns(2)
+    doc_a = _load_team_input(col_a, "Team A", "compare_a", known)
+    doc_b = _load_team_input(col_b, "Team B", "compare_b", known)
+    if doc_a is None or doc_b is None:
+        return
+
+    label_a = f"A · {doc_a.name}" if doc_a.name else "Team A"
+    label_b = f"B · {doc_b.name}" if doc_b.name else "Team B"
+    means_a = position_mean_fits(doc_a, players, weights)
+    means_b = position_mean_fits(doc_b, players, weights)
+    overall_a = overall_mean_fit(doc_a, players, weights)
+    overall_b = overall_mean_fit(doc_b, players, weights)
+
+    if overall_a > overall_b:
+        st.success(f"{label_a} is stronger overall ({overall_a:.2f} vs {overall_b:.2f}).")
+    elif overall_b > overall_a:
+        st.success(f"{label_b} is stronger overall ({overall_b:.2f} vs {overall_a:.2f}).")
+    else:
+        st.info(f"Dead level overall ({overall_a:.2f}).")
+
+    st.plotly_chart(build_team_radar({label_a: means_a, label_b: means_b}),
+                    use_container_width=True)
+
+    rows = [
+        {"Position": pretty(pos), label_a: round(means_a[pos], 2),
+         label_b: round(means_b[pos], 2),
+         "Diff": round(means_a[pos] - means_b[pos], 2)}
+        for pos in POSITIONS
+    ]
+    rows.append({"Position": "Overall", label_a: round(overall_a, 2),
+                 label_b: round(overall_b, 2),
+                 "Diff": round(overall_a - overall_b, 2)})
+    st.table(rows)
+
+
 def main() -> None:
     st.set_page_config(page_title="Ultimate XI", layout="wide")
     players = load_players()
@@ -220,7 +287,8 @@ def main() -> None:
     with st.sidebar:
         page = st.radio(
             "Page",
-            ["Compare", "Team builder", "Edit ratings", "Edit weights"],
+            ["Compare", "Team builder", "Team vs Team",
+             "Edit ratings", "Edit weights"],
             index=0,
         )
 
@@ -228,6 +296,8 @@ def main() -> None:
         compare_page(players)
     elif page == "Team builder":
         team_builder_page(players)
+    elif page == "Team vs Team":
+        compare_teams_page(players)
     elif page == "Edit ratings":
         edit_page(players)
     else:

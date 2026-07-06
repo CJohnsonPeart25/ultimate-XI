@@ -1,6 +1,6 @@
 import plotly.graph_objects as go
 
-from models import MAX_RATING, Player, view_axis_keys
+from models import MAX_RATING, POSITIONS, Player, view_axis_keys
 
 # Distinct hues; each player gets one, with a translucent fill for the FIFA look.
 PALETTE = [
@@ -46,6 +46,37 @@ def build_radar(players: dict[str, Player], selected: list[str],
         polar=dict(radialaxis=dict(visible=True, range=[0, MAX_RATING])),
         showlegend=True,
         height=600,
+        margin=dict(l=60, r=60, t=40, b=40),
+    )
+    return fig
+
+
+def build_team_radar(team_series: dict[str, dict[str, float]]) -> go.Figure:
+    """Overlay Teams on the four Position axes; each value is a mean Fit."""
+    axis_labels = [pretty(pos) for pos in POSITIONS]
+    closed_labels = axis_labels + axis_labels[:1]
+
+    fig = go.Figure()
+    for i, (label, scores) in enumerate(team_series.items()):
+        values = [scores[pos] for pos in POSITIONS]
+        values = values + values[:1]
+        color = PALETTE[i % len(PALETTE)]
+        fig.add_trace(
+            go.Scatterpolar(
+                r=values,
+                theta=closed_labels,
+                fill="toself",
+                name=label,
+                line=dict(color=color, width=2),
+                fillcolor=_rgba(color, 0.25),
+                hovertemplate="%{theta}: %{r:.2f}<extra>" + label + "</extra>",
+            )
+        )
+
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[0, MAX_RATING])),
+        showlegend=True,
+        height=520,
         margin=dict(l=60, r=60, t=40, b=40),
     )
     return fig
