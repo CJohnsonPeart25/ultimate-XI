@@ -1,9 +1,14 @@
 import plotly.graph_objects as go
 import streamlit as st
 
-from models import CATEGORIES, load_characters
+from models import CATEGORIES, load_characters, update_player
 
 MAX_RATING = 5.0
+RATING_STEP = 0.5
+
+
+def pretty(name: str) -> str:
+    return name.replace("_", " ").title()
 
 # Distinct hues; each player gets one, with a translucent fill for the FIFA look.
 PALETTE = [
@@ -74,22 +79,18 @@ def build_radar(characters: dict, selected: list[str], view: str,
     return fig
 
 
-def main() -> None:
-    st.set_page_config(page_title="Ultimate XI", layout="wide")
+def compare_page(characters: dict) -> None:
     st.title("Ultimate XI — Stat Comparison")
-
-    characters = load_characters()
     categories = CATEGORIES
-    view_options = ["Overall"] + [c.replace("_", " ").title() for c in categories]
-    label_to_key = {c.replace("_", " ").title(): c for c in categories}
+    view_options = ["Overall"] + [pretty(c) for c in categories]
+    label_to_key = {pretty(c): c for c in categories}
 
     with st.sidebar:
-        st.header("Compare")
         selected = st.multiselect(
             "Characters",
             options=sorted(characters.keys()),
             default=["mario", "bowser"],
-            format_func=lambda n: n.replace("_", " ").title(),
+            format_func=pretty,
         )
         view_label = st.radio("Stat view", view_options, index=0)
 
@@ -107,13 +108,59 @@ def main() -> None:
     for col, name in zip(cols, selected):
         char = characters[name]
         with col:
-            st.markdown(f"**{name.replace('_', ' ').title()}**")
+            st.markdown(f"**{pretty(name)}**")
             st.metric("Overall", f"{grand_overall(char, categories):.2f}")
             for cat in categories:
-                st.caption(
-                    f"{cat.replace('_', ' ').title()}-Overall: "
-                    f"{category_overall(char, cat):.2f}"
+                st.caption(f"{pretty(cat)}-Overall: {category_overall(char, cat):.2f}")
+
+
+def edit_page(characters: dict) -> None:
+    st.title("Ultimate XI — Edit Ratings")
+
+    names = sorted(characters.keys())
+    name = st.selectbox("Player to edit", names, format_func=pretty)
+    char = characters[name]
+
+    with st.form("edit_player", clear_on_submit=False):
+        new_values: dict[str, float] = {}
+        for category, stats in CATEGORIES.items():
+            st.markdown(f"**{pretty(category)}**")
+            cols = st.columns(len(stats))
+            for col, stat in zip(cols, stats):
+                new_values[stat] = col.number_input(
+                    pretty(stat),
+                    min_value=0.0,
+                    max_value=MAX_RATING,
+                    step=RATING_STEP,
+                    value=float(char[category][stat]),
+                    key=f"edit_{stat}",
                 )
+
+        partners = st.multiselect(
+            "Link-up partners",
+            options=[n for n in names if n != name],
+            default=[p for p in characters[name].get("link_up_partners", [])
+                     if p in names],
+            format_func=pretty,
+        )
+        submitted = st.form_submit_button("Save", type="primary")
+
+    if submitted:
+        update_player(name, new_values, partners)
+        st.success(f"Saved ratings for {pretty(name)}.")
+
+
+def main() -> None:
+    st.set_page_config(page_title="Ultimate XI", layout="wide")
+    characters = load_characters()
+
+    with st.sidebar:
+        page = st.radio("Page", ["Compare", "Edit ratings"], index=0)
+
+    if page == "Compare":
+        compare_page(characters)
+    else:
+        edit_page(characters)
 
 
 if __name__ == "__main__":

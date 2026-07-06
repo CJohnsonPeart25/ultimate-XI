@@ -70,10 +70,24 @@ def load_characters() -> dict[str, dict[str, dict[str, float]]]:
     """Return {name: {category: {stat: value}}} for the comparison UI."""
     with Session(engine) as session:
         players = session.exec(select(Player)).all()
-    return {
-        p.name: {
+    result = {}
+    for p in players:
+        char = {
             cat: {stat: getattr(p, stat) for stat in stats}
             for cat, stats in CATEGORIES.items()
         }
-        for p in players
-    }
+        char["link_up_partners"] = p.link_up_partners
+        result[p.name] = char
+    return result
+
+
+def update_player(name: str, stat_values: dict[str, float],
+                  link_up_partners: list[str]) -> None:
+    """Persist edited ratings for one player in a single transaction."""
+    with Session(engine) as session:
+        player = session.get(Player, name)
+        for field, value in stat_values.items():
+            setattr(player, field, value)
+        player.link_up_partners = link_up_partners
+        session.add(player)
+        session.commit()
