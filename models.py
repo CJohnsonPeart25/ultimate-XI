@@ -14,6 +14,15 @@ CATEGORIES: dict[str, list[str]] = {
     "goalkeeping": ["reflexes", "handling", "positioning_gk", "distribution"],
     "hidden": ["consistency", "injury_proneness"],
 }
+STAT_FIELDS = [stat for stats in CATEGORIES.values() for stat in stats]
+
+# The radar "view" that plots category averages instead of a single category's stats.
+OVERALL_VIEW = "Overall"
+
+
+def view_axis_keys(view: str) -> list[str]:
+    """Axis keys (category names, or stat names) for a given radar view."""
+    return list(CATEGORIES) if view == OVERALL_VIEW else CATEGORIES[view]
 
 
 class Player(SQLModel, table=True):
@@ -45,6 +54,20 @@ class Player(SQLModel, table=True):
 
     link_up_partners: list[str] = Field(default_factory=list, sa_column=Column(JSON))
 
+    def category_overall(self, category: str) -> float:
+        stats = CATEGORIES[category]
+        return sum(getattr(self, stat) for stat in stats) / len(stats)
+
+    @property
+    def overall(self) -> float:
+        return sum(getattr(self, stat) for stat in STAT_FIELDS) / len(STAT_FIELDS)
+
+    def axis_values(self, view: str) -> list[float]:
+        """Radar r-series for a view: category averages, or one category's stats."""
+        if view == OVERALL_VIEW:
+            return [self.category_overall(cat) for cat in CATEGORIES]
+        return [getattr(self, stat) for stat in CATEGORIES[view]]
+
 
 engine = create_engine(
     f"sqlite:///{DB_PATH}",
@@ -66,19 +89,9 @@ def init_db() -> None:
     SQLModel.metadata.create_all(engine)
 
 
-def load_characters() -> dict[str, dict[str, dict[str, float]]]:
-    """Return {name: {category: {stat: value}}} for the comparison UI."""
+def load_players() -> dict[str, Player]:
     with Session(engine) as session:
-        players = session.exec(select(Player)).all()
-    result = {}
-    for p in players:
-        char = {
-            cat: {stat: getattr(p, stat) for stat in stats}
-            for cat, stats in CATEGORIES.items()
-        }
-        char["link_up_partners"] = p.link_up_partners
-        result[p.name] = char
-    return result
+        return {p.name: p for p in session.exec(select(Player)).all()}
 
 
 def update_player(name: str, stat_values: dict[str, float],
