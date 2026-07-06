@@ -59,7 +59,7 @@ def edit_page(players: dict[str, Player]) -> None:
                     max_value=MAX_RATING,
                     step=RATING_STEP,
                     value=float(getattr(player, stat)),
-                    key=f"edit_{stat}",
+                    key=f"edit_{name}_{stat}",
                 )
 
         partners = st.multiselect(
