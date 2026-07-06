@@ -1,6 +1,12 @@
 # Stochastic match engine (L1, deferred)
 
-Type: HITL
+Type: HITL — DEFERRED
+
+> Deferred by decision (see docs/research/simulation-design-decisions.md and
+> ADR-0001). A full event-by-event Monte Carlo engine is a large subsystem; the
+> M1+M2 xG/Poisson model already gives outcome probabilities and a scoreline at a
+> fraction of the complexity. This remains the long-term endpoint the hidden Stats
+> were authored for — build only if the group wants event-level realism.
 
 ## Parent
 

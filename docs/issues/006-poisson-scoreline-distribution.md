@@ -18,10 +18,10 @@ docs/research/team-comparison-methods.md).
 
 ## Acceptance criteria
 
-- [ ] P(win)/P(draw)/P(loss) computed from the two xG values via a Poisson model
-- [ ] Most likely scoreline(s) surfaced
-- [ ] Displayed on the team comparison page next to the xG numbers
-- [ ] Tests cover the probability computation (sums to 1; symmetry sanity checks)
+- [x] P(win)/P(draw)/P(loss) computed from the two xG values via a Poisson model
+- [x] Most likely scoreline(s) surfaced
+- [x] Displayed on the team comparison page next to the xG numbers
+- [x] Tests cover the probability computation (sums to 1; symmetry sanity checks)
 
 ## Blocked by
 

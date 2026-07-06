@@ -18,11 +18,11 @@ is the analogue). See docs/research/team-comparison-methods.md.
 
 ## Acceptance criteria
 
-- [ ] Co-placed `link_up_partners` pairs are detected within a Team
-- [ ] A tunable chemistry multiplier adjusts the affected line's contribution to xG
-- [ ] A Team with strong link-ups beats an otherwise-identical Team without them
-- [ ] The chemistry contribution is visible in the comparison output
-- [ ] Tests cover pair detection and the multiplier effect
+- [x] Co-placed `link_up_partners` pairs are detected within a Team (creative lines)
+- [x] A tunable chemistry multiplier adjusts the affected line's contribution to xG
+- [x] A Team with strong link-ups beats an otherwise-identical Team without them
+- [x] The chemistry contribution is visible in the comparison output
+- [x] Tests cover pair detection and the multiplier effect
 
 ## Blocked by
 

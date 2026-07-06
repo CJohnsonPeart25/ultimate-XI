@@ -24,12 +24,20 @@ shared persistence, migrations, or concurrency handling.
 
 - SQLModel is **not** involved in Teams; only Characters and the `position_weight`
   table are DB-backed. A future move to persisted Teams would be a real migration.
-- **Team-vs-team comparison is not yet locked.** Tentative approach: per-Position
-  mean Fit plus an overall mean. Documented intended direction is a lightweight
-  *matchup* model — a team's Attack (supplied by Midfield) tested against the
-  opponent's Defence + Goalkeeper to produce expected goals — so that formation
-  balance (e.g. "10 in attack") emerges from the matchup rather than a fairness
-  rule, with `link_up_partners` acting as a chemistry multiplier. The per-Position
-  means become inputs to that model, not the final answer. The `state_template.yaml`
-  stat descriptions (consistency = variance, aggression → fouls) point at an
-  eventual stochastic match engine as the endpoint.
+- **Team-vs-team comparison — LOCKED.** The accepted method is the **matchup →
+  expected-goals model (M1)**: a team's Attack (supplied by Midfield) is tested
+  against the opponent's Defence + Goalkeeper to produce expected goals, a Poisson
+  layer (M2) turns the two xG numbers into P(win/draw/loss) and a likely scoreline,
+  and co-placed `link_up_partners` in the creative lines add a chemistry boost (M2/
+  M1). Formation balance emerges (e.g. "10 in attack" concedes rather than being
+  penalised by a rule). Implemented in `simulation.py` with all coefficients in
+  `SimParams` (surfaced as sliders). The earlier per-Position **mean Fit + overall
+  (S1)** is retained as a quick static baseline on the same page, superseded by M1
+  as the verdict. Rationale and every coefficient choice:
+  `docs/research/simulation-design-decisions.md`.
+- **Deferred (not built):** finer **role-weighted Fit for named positions (M3)** and
+  a full **stochastic match engine (L1)** — see issues 008/009. These were
+  consciously deferred in favour of simplicity; the current xG+Poisson model is the
+  intended everyday tool. The `state_template.yaml` stats (consistency = variance,
+  aggression → fouls, injury_proneness) remain the design target for L1 if it is
+  ever picked up.

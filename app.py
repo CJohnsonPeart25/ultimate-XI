@@ -15,6 +15,7 @@ from models import (
     update_player,
     update_position_weights,
 )
+from simulation import SimParams, simulate
 from team import (
     Placement,
     TeamDoc,
@@ -278,6 +279,50 @@ def compare_teams_page(players: dict[str, Player]) -> None:
                  label_b: round(overall_b, 2),
                  "Diff": round(overall_a - overall_b, 2)})
     st.table(rows)
+
+    _simulation_section(doc_a, doc_b, players, weights, label_a, label_b)
+
+
+def _simulation_section(doc_a, doc_b, players, weights, label_a, label_b) -> None:
+    st.subheader("Match simulation")
+    st.caption("Attack (fed by Midfield) vs the opponent's Defence + Goalkeeper "
+               "→ expected goals → outcome. Tune the sliders to taste.")
+
+    params = SimParams()
+    with st.expander("Simulation settings"):
+        params.base_xg = st.slider("Base expected goals", 0.5, 3.0,
+                                   params.base_xg, 0.05)
+        params.slope = st.slider("Attack sensitivity", 0.1, 1.5,
+                                 params.slope, 0.05)
+        params.midfield_supply_weight = st.slider(
+            "Midfield supply to attack", 0.0, 1.0, params.midfield_supply_weight, 0.05)
+        params.goalkeeper_weight = st.slider("Goalkeeper share of resistance",
+                                            0.0, 1.5, params.goalkeeper_weight, 0.05)
+        params.chemistry_per_link = st.slider("Chemistry boost per link-up", 0.0, 0.2,
+                                             params.chemistry_per_link, 0.01)
+
+    result = simulate(doc_a, doc_b, players, weights, params)
+
+    c1, c2 = st.columns(2)
+    c1.metric(f"{label_a} — xG", f"{result.xg_a:.2f}")
+    c2.metric(f"{label_b} — xG", f"{result.xg_b:.2f}")
+    c1.metric("Win / Draw / Loss",
+              f"{result.p_a_win:.0%} / {result.p_draw:.0%} / {result.p_b_win:.0%}")
+    c2.metric("Win / Draw / Loss",
+              f"{result.p_b_win:.0%} / {result.p_draw:.0%} / {result.p_a_win:.0%}")
+    c1.metric("Expected points", f"{result.xpoints_a:.2f}")
+    c2.metric("Expected points", f"{result.xpoints_b:.2f}")
+
+    st.markdown(
+        f"**Most likely score:** {label_a} {result.likely_score[0]}"
+        f"–{result.likely_score[1]} {label_b}"
+    )
+    st.caption(
+        f"Attack/Resistance — {label_a}: {result.a.attack:.2f}/{result.a.resistance:.2f} "
+        f"({result.a.chemistry_links} link-ups) · "
+        f"{label_b}: {result.b.attack:.2f}/{result.b.resistance:.2f} "
+        f"({result.b.chemistry_links} link-ups)"
+    )
 
 
 def main() -> None:

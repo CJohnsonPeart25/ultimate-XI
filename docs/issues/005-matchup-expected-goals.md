@@ -24,12 +24,12 @@ before implementation.
 
 ## Acceptance criteria
 
-- [ ] A team's Attack strength (Attack fed by Midfield) and defensive resistance (Defence + Goalkeeper) are derived from per-Position Fit
-- [ ] Each side's xG is computed from its attack strength vs the opponent's resistance
-- [ ] "10 in attack" loses to a balanced Team without any explicit fairness rule
-- [ ] Coefficients are tunable and documented
-- [ ] ADR-0001 updated: M1 recorded as accepted method, S1 as superseded baseline
-- [ ] Tests cover the strength derivation and xG computation
+- [x] A team's Attack strength (Attack fed by Midfield) and defensive resistance (Defence + Goalkeeper) are derived from per-Position Fit
+- [x] Each side's xG is computed from its attack strength vs the opponent's resistance
+- [x] "10 in attack" loses to a balanced Team without any explicit fairness rule
+- [x] Coefficients are tunable and documented
+- [x] ADR-0001 updated: M1 recorded as accepted method, S1 as superseded baseline
+- [x] Tests cover the strength derivation and xG computation
 
 ## Blocked by
 

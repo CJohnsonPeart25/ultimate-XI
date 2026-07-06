@@ -16,12 +16,17 @@ Hattrick, Dixon–Coles/Poisson, OOTP) in
 
 ## Staged path (each slice depends on the last)
 
-1. **004 — Per-Position mean Fit + overall (S1, baseline)** — ship now.
-2. **005 — Matchup → expected goals (M1)** — the real comparison; ADR-0001's intent.
-3. **006 — Poisson scoreline distribution (M2)** — turn xG into P(win/draw/loss).
-4. **007 — Chemistry multiplier from `link_up_partners`** — synergy in the matchup.
-5. **008 — Role-weighted Fit (M3, future)** — pairs with named Positions; optional.
-6. **009 — Stochastic match engine (L1, deferred)** — long-term endpoint.
+1. **004 — Per-Position mean Fit + overall (S1, baseline)** — ✅ done.
+2. **005 — Matchup → expected goals (M1)** — ✅ done (`simulation.py`).
+3. **006 — Poisson scoreline distribution (M2)** — ✅ done.
+4. **007 — Chemistry multiplier from `link_up_partners`** — ✅ done.
+5. **008 — Role-weighted Fit (M3, future)** — ⏸️ deferred (needs named Positions).
+6. **009 — Stochastic match engine (L1, deferred)** — ⏸️ deferred (long-term endpoint).
+
+Status: the core simulation (S1 baseline + M1 xG + M2 Poisson + chemistry) is
+shipped and tunable via sliders. 008 and 009 are consciously deferred in favour of
+simplicity — the xG+Poisson model is the intended everyday tool. Pick them up only
+if the group wants named positions (008) or a full event-by-event engine (009).
 
 ## Notes
 

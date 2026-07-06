@@ -1,6 +1,12 @@
 # Role-weighted Fit for named Positions (M3, future)
 
-Type: HITL
+Type: HITL — DEFERRED
+
+> Deferred by decision (see docs/research/simulation-design-decisions.md and
+> ADR-0001). Introducing named positions expands the Position model, the team
+> builder UI, and CONTEXT.md — a real product step that runs against the current
+> "simplicity wins" preference. The coarse four-Position model is the intended
+> everyday tool. Pick this up only if the group wants named positions.
 
 ## Parent
 
