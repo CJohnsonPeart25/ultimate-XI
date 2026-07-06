@@ -1,32 +1,33 @@
-# Team-vs-team comparison
+# Team-vs-team comparison — per-Position mean baseline (S1)
 
-Type: HITL
+Type: AFK
+
+## Parent
+
+epic-team-vs-team-simulation
 
 ## What to build
 
-Compare two complete Teams. Load two Team JSON documents (or one built + one
-imported) and show a per-Position comparison plus an overall.
+The **baseline** team-vs-team comparison. Load two complete Teams (paste JSON,
+reusing the `TeamDoc` schema and validation) and show which is stronger by
+**per-Position mean Fit** plus an **overall mean** of all 11 Placements' Fit.
+Overlay the two Teams on a four-axis (Position) radar and show a line-by-line
+table.
 
-**This slice is HITL: the comparison method is not locked.** The tentative
-approach is per-Position **mean Fit** (mean of the Fits of the Placements assigned
-to each Position) plus an overall mean of all 11 Fits, overlaid on the existing
-radar (four Position axes). ADR-0001 records the intended direction as a
-lightweight *matchup* model — a team's Attack (supplied by Midfield) tested
-against the opponent's Defence + Goalkeeper to produce expected goals, with
-`link_up_partners` as a chemistry multiplier — so that formation balance emerges
-rather than being a fairness rule. **A human decision is required before
-implementing:** ship the tentative mean now, or invest in the matchup model.
-
-Resolve that decision first, then build the agreed comparison.
+Decision (resolves the former HITL question): ship S1 now as an explicit
+**baseline**, and commit to the matchup → expected-goals model (issue 005 / M1) as
+the real answer. S1's per-Position means become the inputs to M1, so this is not
+throwaway. See docs/research/team-comparison-methods.md.
 
 ## Acceptance criteria
 
-- [ ] Decision recorded (update ADR-0001): tentative per-Position mean vs matchup model
-- [ ] Two complete Teams can be loaded for comparison
-- [ ] The agreed metric is computed for each Team and shown per Position plus overall
-- [ ] The comparison is visualized (radar overlay of the two Teams across the four Positions)
-- [ ] Tests cover the chosen comparison computation
+- [ ] Decision recorded: ship S1 baseline, target M1 (this issue = S1)
+- [ ] Two complete Teams can be loaded (pasted JSON, validated; incomplete teams rejected clearly)
+- [ ] Per-Position mean Fit computed for each Team, plus an overall mean
+- [ ] The two Teams are overlaid on a four-Position radar
+- [ ] A per-Position table shows both Teams and the difference
+- [ ] Tests cover the per-Position mean and overall-mean computations
 
 ## Blocked by
 
-- 003-team-json-export-import
+- None — can start immediately (depends only on Fit + TeamDoc, both built)
