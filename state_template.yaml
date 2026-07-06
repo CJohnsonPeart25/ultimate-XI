@@ -1,0 +1,59 @@
+# 1. Physical Attributes
+physical:
+  pace:
+    description: "Speed of movement for counter-attacks and recovery."
+  stamina:
+    description: "Prevents late-game statistical penalties as the match progresses."
+  strength:
+    description: "Success rate for shielding, shoulder challenges, and aerial duels."
+  agility:
+    description: "Modifies success for quick turns, dribbling, and reactive defending."
+
+# 2. Technical Attributes (Outfield)
+technical:
+  passing:
+    description: "Base probability of completing short or long ground passes."
+  shooting:
+    description: "Probability of a shot being on target and challenging the keeper."
+  dribbling:
+    description: "Ability to retain possession and bypass opponents 1-on-1."
+  tackling:
+    description: "Success rate of stealing the ball without triggering a foul."
+  interceptions:
+    description: "Chance of cutting out an opponent's pass before it reaches the target."
+
+# 3. Mental & Tactical Attributes
+mental:
+  positioning:
+    description: "Likelihood of finding space for a shot or blocking a passing lane."
+  vision:
+    description: "Increases probability of attempting high-value, dangerous passes."
+  aggression:
+    description: "Frequency of tackles/presses; correlates with higher foul/card chance."
+  composure:
+    description: "Reduces statistical penalties when under heavy opposition pressure."
+
+# 4. Goalkeeping Attributes
+goalkeeping:
+  reflexes:
+    description: "Core stat for stopping shots, especially from close range."
+  handling:
+    description: "Probability of catching safely versus spilling for a rebound."
+  positioning_gk:
+    description: "Lowers opposing striker's effective shooting by narrowing the angle."
+  distribution:
+    description: "Accuracy of kicks/throws; boosts success of rapid counter-attacks."
+
+# 5. Engine-Specific "Hidden" Stats
+hidden:
+  consistency:
+    description: "Random variance modifier applied before each match."
+  injury_proneness:
+    description: "Probability check triggered during heavy tackles or depleted stamina."
+
+# 6. Synergies
+synergies:
+  link_up_partners:
+    description: "List of player IDs this character has chemistry with for passing buffs."
+    type: list
+    example: ["player_id_1", "player_id_2"]

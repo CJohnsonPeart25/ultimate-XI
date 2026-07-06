@@ -1,0 +1,714 @@
+characters:
+  # --- Veterans ---
+  mario:
+    physical: {pace: 4.0, stamina: 4.5, strength: 3.5, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 4.0, tackling: 3.5, interceptions: 3.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 3.0, composure: 4.5}
+    goalkeeping: {reflexes: 3.5, handling: 3.0, positioning_gk: 3.0, distribution: 3.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["luigi", "peach", "dr_mario"]}
+
+  luigi:
+    physical: {pace: 3.5, stamina: 4.0, strength: 3.5, agility: 4.5}
+    technical: {passing: 4.0, shooting: 3.5, dribbling: 4.0, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 2.0, composure: 2.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 2.5, distribution: 3.5}
+    hidden: {consistency: 3.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mario", "daisy"]}
+
+  peach:
+    physical: {pace: 3.5, stamina: 4.0, strength: 3.0, agility: 4.5}
+    technical: {passing: 4.5, shooting: 3.5, dribbling: 4.5, tackling: 2.5, interceptions: 3.0}
+    mental: {positioning: 4.0, vision: 4.5, aggression: 2.5, composure: 4.5}
+    goalkeeping: {reflexes: 3.0, handling: 3.5, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mario", "daisy"]}
+
+  bowser:
+    physical: {pace: 2.5, stamina: 4.5, strength: 5.0, agility: 2.0}
+    technical: {passing: 3.0, shooting: 5.0, dribbling: 2.5, tackling: 4.5, interceptions: 3.5}
+    mental: {positioning: 3.5, vision: 2.5, aggression: 5.0, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 4.5, positioning_gk: 4.5, distribution: 3.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["bowser_jr", "kamek"]}
+
+  dr_mario:
+    physical: {pace: 3.0, stamina: 4.0, strength: 4.0, agility: 3.5}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 3.5, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.0, composure: 5.0}
+    goalkeeping: {reflexes: 3.0, handling: 4.0, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mario", "peach"]}
+
+  rosalina_luma:
+    physical: {pace: 3.5, stamina: 3.5, strength: 3.0, agility: 4.0}
+    technical: {passing: 4.5, shooting: 3.5, dribbling: 4.5, tackling: 2.0, interceptions: 4.5}
+    mental: {positioning: 5.0, vision: 5.0, aggression: 1.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 4.5, positioning_gk: 4.5, distribution: 5.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["peach", "mario"]}
+
+  bowser_jr:
+    physical: {pace: 4.0, stamina: 4.0, strength: 3.5, agility: 4.0}
+    technical: {passing: 4.0, shooting: 3.5, dribbling: 4.5, tackling: 3.5, interceptions: 3.5}
+    mental: {positioning: 3.5, vision: 4.0, aggression: 4.0, composure: 3.0}
+    goalkeeping: {reflexes: 3.0, handling: 2.5, positioning_gk: 3.0, distribution: 3.5}
+    hidden: {consistency: 3.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["bowser"]}
+
+  yoshi:
+    physical: {pace: 4.5, stamina: 4.5, strength: 4.0, agility: 4.5}
+    technical: {passing: 3.5, shooting: 4.0, dribbling: 4.5, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 3.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.5, handling: 4.0, positioning_gk: 3.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mario", "luigi"]}
+
+  donkey_kong:
+    physical: {pace: 3.5, stamina: 4.5, strength: 5.0, agility: 3.0}
+    technical: {passing: 3.0, shooting: 4.5, dribbling: 3.5, tackling: 4.5, interceptions: 2.5}
+    mental: {positioning: 4.0, vision: 3.0, aggression: 4.5, composure: 3.5}
+    goalkeeping: {reflexes: 4.5, handling: 4.5, positioning_gk: 4.5, distribution: 4.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["diddy_kong"]}
+
+  diddy_kong:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.0, agility: 5.0}
+    technical: {passing: 4.0, shooting: 3.5, dribbling: 4.5, tackling: 3.0, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.0, aggression: 3.0, composure: 3.5}
+    goalkeeping: {reflexes: 4.0, handling: 2.5, positioning_gk: 2.5, distribution: 3.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.5}
+    synergies: {link_up_partners: ["donkey_kong"]}
+
+  link:
+    physical: {pace: 3.5, stamina: 5.0, strength: 4.0, agility: 3.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.0, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 3.5, handling: 3.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["zelda"]}
+
+  zelda:
+    physical: {pace: 3.0, stamina: 3.5, strength: 2.0, agility: 4.0}
+    technical: {passing: 5.0, shooting: 4.5, dribbling: 4.0, tackling: 2.5, interceptions: 3.0}
+    mental: {positioning: 4.5, vision: 5.0, aggression: 1.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 3.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["link", "sheik"]}
+
+  sheik:
+    physical: {pace: 5.0, stamina: 4.5, strength: 2.5, agility: 5.0}
+    technical: {passing: 4.5, shooting: 3.0, dribbling: 5.0, tackling: 4.0, interceptions: 5.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 5.0, handling: 2.5, positioning_gk: 3.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.5}
+    synergies: {link_up_partners: ["zelda", "link"]}
+
+  ganondorf:
+    physical: {pace: 2.0, stamina: 4.5, strength: 5.0, agility: 2.0}
+    technical: {passing: 3.5, shooting: 5.0, dribbling: 2.5, tackling: 5.0, interceptions: 3.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 5.0, composure: 4.5}
+    goalkeeping: {reflexes: 3.5, handling: 4.0, positioning_gk: 4.5, distribution: 3.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  young_link:
+    physical: {pace: 4.0, stamina: 4.5, strength: 3.5, agility: 4.5}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.0, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.0, aggression: 3.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["zelda"]}
+
+  toon_link:
+    physical: {pace: 4.5, stamina: 4.0, strength: 3.0, agility: 4.5}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 4.5, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.5, aggression: 3.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 3.0, distribution: 4.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["zelda"]}
+
+  samus:
+    physical: {pace: 3.5, stamina: 4.5, strength: 4.0, agility: 3.5}
+    technical: {passing: 4.5, shooting: 5.0, dribbling: 3.0, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["pikachu"]}
+
+  zero_suit_samus:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.0, agility: 5.0}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 4.5, tackling: 3.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  kirby:
+    physical: {pace: 3.5, stamina: 4.5, strength: 2.5, agility: 4.5}
+    technical: {passing: 4.0, shooting: 3.5, dribbling: 4.5, tackling: 3.0, interceptions: 3.5}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 2.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 4.5, positioning_gk: 3.0, distribution: 3.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["meta_knight", "king_dedede"]}
+
+  meta_knight:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.5, agility: 5.0}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 4.5, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 2.0, positioning_gk: 3.5, distribution: 3.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["kirby"]}
+
+  king_dedede:
+    physical: {pace: 3.0, stamina: 4.5, strength: 5.0, agility: 2.5}
+    technical: {passing: 3.5, shooting: 4.5, dribbling: 3.0, tackling: 4.5, interceptions: 3.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 4.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 4.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["kirby", "meta_knight"]}
+
+  fox:
+    physical: {pace: 5.0, stamina: 4.5, strength: 3.0, agility: 5.0}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.5, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 5.0, handling: 3.0, positioning_gk: 3.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["falco"]}
+
+  falco:
+    physical: {pace: 4.5, stamina: 4.0, strength: 3.0, agility: 5.0}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 3.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.5, composure: 4.5}
+    goalkeeping: {reflexes: 5.0, handling: 3.0, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["fox"]}
+
+  wolf:
+    physical: {pace: 4.5, stamina: 4.5, strength: 4.0, agility: 4.5}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 5.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["fox", "falco"]}
+
+  pikachu:
+    physical: {pace: 4.5, stamina: 4.5, strength: 2.5, agility: 5.0}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 5.0, tackling: 3.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 5.0, handling: 2.0, positioning_gk: 3.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.5}
+    synergies: {link_up_partners: ["pichu", "pokemon_trainer"]}
+
+  jigglypuff:
+    physical: {pace: 2.5, stamina: 3.5, strength: 1.5, agility: 5.0}
+    technical: {passing: 3.5, shooting: 3.0, dribbling: 4.5, tackling: 1.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 1.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 2.0, positioning_gk: 2.5, distribution: 3.0}
+    hidden: {consistency: 3.0, injury_proneness: 2.0}
+    synergies: {link_up_partners: ["pikachu"]}
+
+  mewtwo:
+    physical: {pace: 4.5, stamina: 4.0, strength: 3.5, agility: 4.5}
+    technical: {passing: 5.0, shooting: 4.5, dribbling: 4.5, tackling: 3.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 5.0, aggression: 3.5, composure: 5.0}
+    goalkeeping: {reflexes: 5.0, handling: 4.0, positioning_gk: 4.5, distribution: 5.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["lucario"]}
+
+  pichu:
+    physical: {pace: 4.5, stamina: 3.0, strength: 2.0, agility: 5.0}
+    technical: {passing: 4.0, shooting: 3.5, dribbling: 4.5, tackling: 2.5, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 4.5, composure: 3.5}
+    goalkeeping: {reflexes: 4.5, handling: 1.5, positioning_gk: 2.5, distribution: 3.5}
+    hidden: {consistency: 2.5, injury_proneness: 5.0}
+    synergies: {link_up_partners: ["pikachu"]}
+
+  squirtle:
+    physical: {pace: 4.5, stamina: 4.0, strength: 2.5, agility: 4.5}
+    technical: {passing: 4.0, shooting: 3.5, dribbling: 4.5, tackling: 3.5, interceptions: 3.5}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 3.0, composure: 4.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 3.0, distribution: 3.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["ivysaur", "charizard"]}
+
+  ivysaur:
+    physical: {pace: 3.5, stamina: 4.5, strength: 3.5, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.0, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 3.5, handling: 3.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["squirtle", "charizard"]}
+
+  charizard:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.5, agility: 3.5}
+    technical: {passing: 3.5, shooting: 4.5, dribbling: 3.5, tackling: 4.5, interceptions: 3.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 4.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 4.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["squirtle", "ivysaur"]}
+
+  lucario:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.0, agility: 4.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.0, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.0, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.5, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 3.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mewtwo", "greninja"]}
+
+  greninja:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.0, agility: 5.0}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.5, tackling: 3.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 5.0, handling: 3.5, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["lucario"]}
+
+  captain_falcon:
+    physical: {pace: 5.0, stamina: 4.5, strength: 4.5, agility: 4.5}
+    technical: {passing: 4.0, shooting: 5.0, dribbling: 4.5, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 5.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  ness:
+    physical: {pace: 3.5, stamina: 4.0, strength: 3.0, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.0, tackling: 3.0, interceptions: 3.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 3.0, distribution: 4.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["lucas"]}
+
+  lucas:
+    physical: {pace: 3.5, stamina: 4.0, strength: 3.0, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.0, tackling: 2.5, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.5, aggression: 3.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 3.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["ness"]}
+
+  ice_climbers:
+    physical: {pace: 3.5, stamina: 4.5, strength: 3.0, agility: 3.5}
+    technical: {passing: 5.0, shooting: 3.5, dribbling: 4.0, tackling: 3.5, interceptions: 3.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.0, composure: 4.0}
+    goalkeeping: {reflexes: 3.5, handling: 3.0, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 3.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  marth:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.5, agility: 4.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.5, tackling: 4.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["lucina", "roy", "ike"]}
+
+  roy:
+    physical: {pace: 4.5, stamina: 4.5, strength: 4.0, agility: 4.5}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.5, handling: 2.5, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["marth"]}
+
+  ike:
+    physical: {pace: 3.5, stamina: 4.5, strength: 5.0, agility: 3.0}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 3.5, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["marth", "robin"]}
+
+  robin:
+    physical: {pace: 3.0, stamina: 4.0, strength: 3.5, agility: 3.5}
+    technical: {passing: 5.0, shooting: 4.5, dribbling: 4.0, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 5.0, vision: 5.0, aggression: 3.0, composure: 5.0}
+    goalkeeping: {reflexes: 3.5, handling: 4.0, positioning_gk: 4.5, distribution: 5.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["lucina", "chrom"]}
+
+  lucina:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.5, agility: 4.5}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.5, tackling: 4.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["marth", "robin", "chrom"]}
+
+  corrin:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.0, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.0, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  mr_game_and_watch:
+    physical: {pace: 4.0, stamina: 4.0, strength: 2.5, agility: 4.5}
+    technical: {passing: 3.5, shooting: 4.0, dribbling: 4.5, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 3.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 3.0, distribution: 3.5}
+    hidden: {consistency: 2.0, injury_proneness: 1.5}
+    synergies: {link_up_partners: ["rob"]}
+
+  pit:
+    physical: {pace: 4.0, stamina: 4.5, strength: 3.5, agility: 4.5}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.0, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 3.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["palutena", "dark_pit"]}
+
+  palutena:
+    physical: {pace: 4.0, stamina: 4.5, strength: 3.0, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.5, tackling: 3.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 5.0, aggression: 2.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 4.5, distribution: 5.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["pit", "dark_pit"]}
+
+  dark_pit:
+    physical: {pace: 4.0, stamina: 4.5, strength: 3.5, agility: 4.5}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 4.0, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.0, aggression: 4.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["pit", "palutena"]}
+
+  wario:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.5, agility: 4.0}
+    technical: {passing: 3.5, shooting: 4.5, dribbling: 4.0, tackling: 4.5, interceptions: 3.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 4.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.0, distribution: 3.5}
+    hidden: {consistency: 3.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mario"]}
+
+  olimar:
+    physical: {pace: 3.0, stamina: 4.0, strength: 2.0, agility: 3.5}
+    technical: {passing: 4.5, shooting: 3.5, dribbling: 4.0, tackling: 2.5, interceptions: 4.0}
+    mental: {positioning: 5.0, vision: 4.5, aggression: 2.0, composure: 4.5}
+    goalkeeping: {reflexes: 3.5, handling: 2.0, positioning_gk: 3.0, distribution: 4.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.5}
+    synergies: {link_up_partners: []}
+
+  rob:
+    physical: {pace: 3.5, stamina: 5.0, strength: 4.0, agility: 3.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 3.5, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.0, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mr_game_and_watch"]}
+
+  villager:
+    physical: {pace: 3.5, stamina: 4.5, strength: 3.0, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.0, tackling: 3.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 2.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 5.0, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["isabelle"]}
+
+  wii_fit_trainer:
+    physical: {pace: 4.0, stamina: 5.0, strength: 3.5, agility: 4.5}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.0, tackling: 3.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 2.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 4.0, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  little_mac:
+    physical: {pace: 5.0, stamina: 4.5, strength: 4.5, agility: 4.5}
+    technical: {passing: 3.0, shooting: 5.0, dribbling: 4.5, tackling: 4.5, interceptions: 3.5}
+    mental: {positioning: 4.0, vision: 3.0, aggression: 5.0, composure: 4.0}
+    goalkeeping: {reflexes: 4.5, handling: 1.0, positioning_gk: 2.0, distribution: 2.5}
+    hidden: {consistency: 3.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  shulk:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.0, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.0, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 5.0, vision: 5.0, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["pyra", "mythra"]}
+
+  duck_hunt:
+    physical: {pace: 4.0, stamina: 4.5, strength: 2.5, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.0, tackling: 3.0, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 2.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 2.5, positioning_gk: 3.0, distribution: 4.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  snake:
+    physical: {pace: 3.5, stamina: 5.0, strength: 4.5, agility: 3.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 3.5, tackling: 4.5, interceptions: 5.0}
+    mental: {positioning: 5.0, vision: 4.5, aggression: 4.0, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 4.5, distribution: 5.0}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: []}
+
+  sonic:
+    physical: {pace: 5.0, stamina: 4.5, strength: 3.0, agility: 5.0}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 5.0, tackling: 3.5, interceptions: 4.5}
+    mental: {positioning: 4.0, vision: 4.0, aggression: 3.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.5, handling: 2.5, positioning_gk: 3.0, distribution: 4.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mario"]}
+
+  mega_man:
+    physical: {pace: 3.5, stamina: 4.5, strength: 4.0, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.0, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.0, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["ryu"]}
+
+  pac_man:
+    physical: {pace: 4.0, stamina: 4.5, strength: 3.5, agility: 4.5}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.5, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 2.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 3.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mario", "donkey_kong"]}
+
+  ryu:
+    physical: {pace: 3.5, stamina: 4.5, strength: 4.5, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.5, positioning_gk: 4.5, distribution: 4.0}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["ken"]}
+
+  cloud:
+    physical: {pace: 4.5, stamina: 4.5, strength: 4.0, agility: 4.5}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["sephiroth"]}
+
+  bayonetta:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.5, agility: 5.0}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 5.0, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 5.0}
+    goalkeeping: {reflexes: 5.0, handling: 3.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["joker"]}
+
+  mii_brawler:
+    physical: {pace: 4.5, stamina: 4.5, strength: 4.0, agility: 4.5}
+    technical: {passing: 3.5, shooting: 4.0, dribbling: 4.0, tackling: 4.0, interceptions: 3.5}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 4.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 3.5, distribution: 3.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mii_swordfighter", "mii_gunner"]}
+
+  mii_swordfighter:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.0, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 4.0, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.0, aggression: 4.0, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.0, positioning_gk: 4.0, distribution: 3.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mii_brawler", "mii_gunner"]}
+
+  mii_gunner:
+    physical: {pace: 3.5, stamina: 4.5, strength: 3.5, agility: 3.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 3.5, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mii_brawler", "mii_swordfighter"]}
+
+  # --- Newcomers ---
+  daisy:
+    physical: {pace: 3.5, stamina: 4.0, strength: 3.0, agility: 4.5}
+    technical: {passing: 4.0, shooting: 3.5, dribbling: 4.5, tackling: 3.0, interceptions: 3.0}
+    mental: {positioning: 4.0, vision: 4.5, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 3.5, handling: 3.5, positioning_gk: 3.5, distribution: 4.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["peach", "luigi"]}
+
+  piranha_plant:
+    physical: {pace: 2.5, stamina: 4.5, strength: 4.0, agility: 2.5}
+    technical: {passing: 3.0, shooting: 4.0, dribbling: 3.0, tackling: 4.5, interceptions: 4.5}
+    mental: {positioning: 4.0, vision: 3.0, aggression: 5.0, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.5, distribution: 3.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["bowser", "mario"]}
+
+  king_k_rool:
+    physical: {pace: 2.5, stamina: 4.5, strength: 5.0, agility: 2.0}
+    technical: {passing: 3.5, shooting: 4.5, dribbling: 2.5, tackling: 4.5, interceptions: 3.5}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 4.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.0, handling: 4.5, positioning_gk: 4.5, distribution: 4.0}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["donkey_kong"]}
+
+  ridley:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.5, agility: 4.0}
+    technical: {passing: 3.5, shooting: 4.5, dribbling: 4.0, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 3.5, aggression: 5.0, composure: 4.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.5, distribution: 3.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["samus", "dark_samus"]}
+
+  dark_samus:
+    physical: {pace: 3.5, stamina: 4.5, strength: 4.0, agility: 3.5}
+    technical: {passing: 4.0, shooting: 5.0, dribbling: 3.5, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["samus", "ridley"]}
+
+  incineroar:
+    physical: {pace: 2.0, stamina: 4.5, strength: 5.0, agility: 3.0}
+    technical: {passing: 3.5, shooting: 4.5, dribbling: 3.5, tackling: 5.0, interceptions: 3.0}
+    mental: {positioning: 4.0, vision: 3.0, aggression: 5.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 4.0, positioning_gk: 4.5, distribution: 3.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["pokemon_trainer"]}
+
+  chrom:
+    physical: {pace: 4.5, stamina: 4.5, strength: 4.0, agility: 4.5}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["robin", "lucina"]}
+
+  byleth:
+    physical: {pace: 3.5, stamina: 4.5, strength: 4.0, agility: 3.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.0, tackling: 4.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 5.0, aggression: 3.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["marth", "robin"]}
+
+  isabelle:
+    physical: {pace: 3.5, stamina: 4.0, strength: 2.5, agility: 4.0}
+    technical: {passing: 4.5, shooting: 3.5, dribbling: 4.0, tackling: 3.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 1.5, composure: 4.5}
+    goalkeeping: {reflexes: 3.5, handling: 4.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["villager"]}
+
+  pyra:
+    physical: {pace: 3.0, stamina: 4.5, strength: 4.5, agility: 3.5}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.0, tackling: 4.0, interceptions: 3.5}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mythra", "shulk"]}
+
+  mythra:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.5, agility: 5.0}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.5, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 3.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["pyra", "shulk"]}
+
+  inkling:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.0, agility: 5.0}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.5, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 4.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 3.5, distribution: 4.5}
+    hidden: {consistency: 4.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["mario"]}
+
+  min_min:
+    physical: {pace: 4.0, stamina: 4.5, strength: 3.5, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.0, tackling: 4.5, interceptions: 5.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 4.0, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["captain_falcon"]}
+
+  ken:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.0, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.0, aggression: 4.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.5, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["ryu"]}
+
+  sephiroth:
+    physical: {pace: 4.0, stamina: 4.0, strength: 4.0, agility: 4.5}
+    technical: {passing: 4.5, shooting: 5.0, dribbling: 4.5, tackling: 4.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 5.0, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["cloud"]}
+
+  simon:
+    physical: {pace: 3.5, stamina: 4.5, strength: 4.5, agility: 3.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 3.5, tackling: 4.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.5, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["richter"]}
+
+  richter:
+    physical: {pace: 3.5, stamina: 4.5, strength: 4.0, agility: 3.5}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 3.5, tackling: 4.5, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["simon"]}
+
+  joker:
+    physical: {pace: 4.5, stamina: 4.5, strength: 3.5, agility: 5.0}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.5, tackling: 4.0, interceptions: 4.5}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 4.0, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["hero"]}
+
+  hero:
+    physical: {pace: 4.0, stamina: 4.0, strength: 4.0, agility: 4.0}
+    technical: {passing: 4.5, shooting: 4.5, dribbling: 4.0, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.5, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 2.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["joker"]}
+
+  banjo_kazooie:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.0, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.0, dribbling: 4.0, tackling: 4.0, interceptions: 4.0}
+    mental: {positioning: 4.0, vision: 4.0, aggression: 4.0, composure: 4.5}
+    goalkeeping: {reflexes: 4.0, handling: 4.0, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["donkey_kong"]}
+
+  terry:
+    physical: {pace: 4.0, stamina: 4.5, strength: 4.5, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 4.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.5, positioning_gk: 4.0, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["ryu", "ken"]}
+
+  steve:
+    physical: {pace: 3.0, stamina: 4.5, strength: 4.0, agility: 3.5}
+    technical: {passing: 5.0, shooting: 4.5, dribbling: 3.5, tackling: 4.5, interceptions: 4.5}
+    mental: {positioning: 5.0, vision: 5.0, aggression: 2.5, composure: 5.0}
+    goalkeeping: {reflexes: 4.0, handling: 3.5, positioning_gk: 4.5, distribution: 5.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["villager", "isabelle"]}
+
+  kazuya:
+    physical: {pace: 3.5, stamina: 4.5, strength: 5.0, agility: 4.0}
+    technical: {passing: 4.0, shooting: 4.5, dribbling: 4.5, tackling: 4.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.0, aggression: 5.0, composure: 5.0}
+    goalkeeping: {reflexes: 4.5, handling: 3.0, positioning_gk: 4.5, distribution: 4.0}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["ryu", "terry"]}
+
+  sora:
+    physical: {pace: 4.0, stamina: 4.5, strength: 3.0, agility: 5.0}
+    technical: {passing: 4.5, shooting: 4.0, dribbling: 4.5, tackling: 3.5, interceptions: 4.0}
+    mental: {positioning: 4.5, vision: 4.5, aggression: 3.5, composure: 4.5}
+    goalkeeping: {reflexes: 4.5, handling: 3.5, positioning_gk: 4.0, distribution: 4.5}
+    hidden: {consistency: 4.5, injury_proneness: 1.0}
+    synergies: {link_up_partners: ["cloud", "sephiroth"]}
