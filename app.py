@@ -1,3 +1,5 @@
+import random
+
 import pandas  # noqa: F401  # eager: force a clean pandas import at startup so
 # plotly's lazy pd.Series check never triggers a first-time import mid hot-reload
 # (which surfaces as "partially initialized module 'pandas'").
@@ -6,6 +8,7 @@ import streamlit as st
 from chart import build_radar, build_team_radar, pretty
 from models import (
     CATEGORIES,
+    GOALKEEPER,
     MAX_RATING,
     OVERALL_VIEW,
     POSITIONS,
@@ -150,6 +153,17 @@ def _apply_team_doc(doc: TeamDoc) -> None:
     st.rerun()
 
 
+def _random_team_doc(names: list[str]) -> TeamDoc:
+    """A valid random team: slot 1 the sole Goalkeeper, the rest random outfield."""
+    picks = random.sample(names, TEAM_SIZE)
+    outfield = [p for p in POSITIONS if p != GOALKEEPER]
+    placements = [Placement(character=picks[0], position=GOALKEEPER)]
+    placements += [
+        Placement(character=c, position=random.choice(outfield)) for c in picks[1:]
+    ]
+    return TeamDoc(name="Random XI", placements=placements)
+
+
 def team_builder_page(players: dict[str, Player]) -> None:
     st.title("Ultimate XI — Team Builder")
     st.caption("Fill 11 slots. Assign each a Position. Exactly one Goalkeeper. "
@@ -172,17 +186,23 @@ def team_builder_page(players: dict[str, Player]) -> None:
                 else:
                     _apply_team_doc(doc)
 
+    # Buttons that write slot/name session_state must run before those widgets
+    # are instantiated this run (Streamlit forbids setting a widget's key after).
+    col_clear, col_random = st.columns(2)
+    if col_clear.button("Clear team"):
+        for i in range(TEAM_SIZE):
+            st.session_state.pop(f"slot_{i}_char", None)
+            st.session_state.pop(f"slot_{i}_pos", None)
+        st.session_state.pop("team_name", None)
+        st.rerun()
+    if col_random.button("Random All", type="primary"):
+        _apply_team_doc(_random_team_doc(names))
+
     st.text_input("Team name", key="team_name")
 
     weights = load_position_weights()
     default_pos = POSITIONS.index("midfield")
     header = st.container()  # tally + validity, filled in after the slots
-
-    if st.button("Clear team"):
-        for i in range(TEAM_SIZE):
-            st.session_state.pop(f"slot_{i}_char", None)
-            st.session_state.pop(f"slot_{i}_pos", None)
-        st.rerun()
 
     chosen = [st.session_state.get(f"slot_{i}_char", EMPTY_SLOT) for i in range(TEAM_SIZE)]
     placements: list[tuple[str, str]] = []
