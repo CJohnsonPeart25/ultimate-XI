@@ -21,11 +21,10 @@ from models import (
     update_player,
     update_position_weights,
 )
-from simulation import SimParams, simulate
+from simulation import MAX_GOALS, SimParams, simulate
 from team import (
     Placement,
     TeamDoc,
-    overall_mean_fit,
     position_mean_fits,
     team_validation_errors,
 )
@@ -263,8 +262,8 @@ def _load_team_input(container, label: str, key: str,
 
 def compare_teams_page(players: dict[str, Player]) -> None:
     st.title("Ultimate XI — Team vs Team")
-    st.caption("Baseline comparison: per-Position mean Fit + overall. "
-               "Paste two complete teams.")
+    st.caption("Per-Position mean Fit breakdown, then the match simulation for the "
+               "verdict. Paste two complete teams.")
 
     known = set(players)
     weights = load_position_weights()
@@ -279,15 +278,6 @@ def compare_teams_page(players: dict[str, Player]) -> None:
     label_b = f"B · {doc_b.name}" if doc_b.name else "Team B"
     means_a = position_mean_fits(doc_a, players, weights)
     means_b = position_mean_fits(doc_b, players, weights)
-    overall_a = overall_mean_fit(doc_a, players, weights)
-    overall_b = overall_mean_fit(doc_b, players, weights)
-
-    if overall_a > overall_b:
-        st.success(f"{label_a} is stronger overall ({overall_a:.2f} vs {overall_b:.2f}).")
-    elif overall_b > overall_a:
-        st.success(f"{label_b} is stronger overall ({overall_b:.2f} vs {overall_a:.2f}).")
-    else:
-        st.info(f"Dead level overall ({overall_a:.2f}).")
 
     st.plotly_chart(build_team_radar({label_a: means_a, label_b: means_b}),
                     width="stretch")
@@ -298,9 +288,6 @@ def compare_teams_page(players: dict[str, Player]) -> None:
          "Diff": round(means_a[pos] - means_b[pos], 2)}
         for pos in POSITIONS
     ]
-    rows.append({"Position": "Overall", label_a: round(overall_a, 2),
-                 label_b: round(overall_b, 2),
-                 "Diff": round(overall_a - overall_b, 2)})
     st.table(rows)
 
     _simulation_section(doc_a, doc_b, players, weights, label_a, label_b)
@@ -346,6 +333,81 @@ def _simulation_section(doc_a, doc_b, players, weights, label_a, label_b) -> Non
         f"{label_b}: {result.b.attack:.2f}/{result.b.resistance:.2f} "
         f"({result.b.chemistry_links} link-ups)"
     )
+
+    _maths_expander(params)
+
+
+def _maths_expander(params: SimParams) -> None:
+    """The exact formulas behind xG and W/D/L, with the current coefficients."""
+    with st.expander("Show the maths (LaTeX)"):
+        st.markdown(
+            r"$\overline{F}_{p}$ = mean positional Fit of a team's line $p$ "
+            r"(goalkeeper, defence, midfield, attack); $L$ = co-placed link-up pairs."
+        )
+
+        st.markdown("**1. Attack rating** — attack line, supplied by midfield, boosted by chemistry:")
+        st.latex(
+            r"\text{Att} = \frac{w_a\,\overline{F}_{att} + w_{ms}\,\overline{F}_{mid}}"
+            r"{w_a + w_{ms}}\;\bigl(1 + c\,L\bigr)"
+        )
+
+        st.markdown("**2. Resistance** — defence + goalkeeper, shielded by midfield:")
+        st.latex(
+            r"\text{Res} = \frac{w_d\,\overline{F}_{def} + w_g\,\overline{F}_{gk}"
+            r" + w_{sh}\,\overline{F}_{mid}}{w_d + w_g + w_{sh}}"
+        )
+
+        st.markdown("**3. Expected goals** — each team's attack vs the other's resistance:")
+        st.latex(
+            r"xG_A = \max\!\bigl(f,\; b + s\,(\text{Att}_A - \text{Res}_B)\bigr)"
+            r" \qquad "
+            r"xG_B = \max\!\bigl(f,\; b + s\,(\text{Att}_B - \text{Res}_A)\bigr)"
+        )
+
+        st.markdown(r"**4. Goals are Poisson** with mean $\lambda = xG$:")
+        st.latex(r"P(k) = \frac{\lambda^{k} e^{-\lambda}}{k!}")
+
+        st.markdown(
+            f"**5. Outcome** — sum over the score grid $i,j \\in [0,{MAX_GOALS}]$:"
+        )
+        st.latex(
+            r"P(\text{A win}) = \sum_{i>j} P_A(i)\,P_B(j)"
+            r" \qquad "
+            r"P(\text{draw}) = \sum_{i=j} P_A(i)\,P_B(j)"
+            r" \qquad "
+            r"P(\text{B win}) = \sum_{i<j} P_A(i)\,P_B(j)"
+        )
+
+        st.markdown("**6. Expected points** and most likely score:")
+        st.latex(
+            r"xP_A = 3\,P(\text{A win}) + P(\text{draw})"
+            r" \qquad "
+            r"(\hat{i},\hat{j}) = \arg\max_{i,j} P_A(i)\,P_B(j)"
+        )
+
+        st.caption("Current coefficients (from the sliders / SimParams):")
+        st.latex(
+            rf"w_a={params.attack_weight:g},\; w_{{ms}}={params.midfield_supply_weight:g},\;"
+            rf"w_d={params.defence_weight:g},\; w_g={params.goalkeeper_weight:g},\;"
+            rf"w_{{sh}}={params.midfield_shield_weight:g},\;"
+            rf"b={params.base_xg:g},\; s={params.slope:g},\;"
+            rf"f={params.xg_floor:g},\; c={params.chemistry_per_link:g}"
+        )
+        st.markdown(
+            "| Symbol | Meaning |\n"
+            "|---|---|\n"
+            r"| $w_a$ | attack line's weight in the Attack rating |" "\n"
+            r"| $w_{ms}$ | midfield's supply weight into the Attack rating |" "\n"
+            r"| $w_d$ | defence's weight in Resistance |" "\n"
+            r"| $w_g$ | goalkeeper's weight in Resistance |" "\n"
+            r"| $w_{sh}$ | midfield's shielding weight in Resistance |" "\n"
+            r"| $b$ | base expected goals for an evenly-matched game |" "\n"
+            r"| $s$ | slope: how hard an Attack−Resistance gap swings xG |" "\n"
+            r"| $f$ | xG floor (there's always a chance) |" "\n"
+            r"| $c$ | chemistry boost to attack per co-placed link-up pair |" "\n"
+            r"| $L$ | count of those link-up pairs in the creative lines |" "\n"
+            r"| $\overline{F}_p$ | mean positional Fit of line $p$ |"
+        )
 
 
 def _view_metrics(view: str) -> dict[str, callable]:
