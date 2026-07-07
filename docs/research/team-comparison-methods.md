@@ -49,7 +49,7 @@ richer ones:
 
 - **`link_up_partners`** — per-Character synergy list, described in
   `state_template.yaml` as "passing buffs". Chemistry, in EA FC terms.
-- **Hidden Stats** `consistency` (per-match variance) and `injury_proneness` — by
+- **Hidden Stats** `consistency` (per-match variance) and `injury_resilience` — by
   design excluded from Fit, and only meaningful once a method rolls dice.
 
 ---
@@ -269,13 +269,13 @@ attribute weights — the same pattern as our `position_weight` table, one level
 **How it works.** Simulate a match event-by-event: contest possession (midfield
 battle), generate chances, take shots (`shooting` vs Goalkeeper `reflexes`/`handling`/
 `positioning_gk`), award fouls/cards from `aggression`, apply per-match variance from
-`consistency`, and roll injuries from `injury_proneness` during heavy tackles / low
+`consistency`, and roll injuries from low `injury_resilience` during heavy tackles / low
 `stamina`. Run once for a narrative match, or **Monte Carlo** it thousands of times
 for a probability distribution. Every Stat description in `state_template.yaml` maps to
 a mechanic here — this data was authored for exactly this.
 
 **Data consumed.** _Everything._ All 0–5 Stats (not just those in Fit), both hidden
-Stats (`consistency`, `injury_proneness` finally do work), `link_up_partners` as a
+Stats (`consistency`, `injury_resilience` finally do work), `link_up_partners` as a
 live passing buff, and Fit as a convenient per-Placement summary where a full stat
 contest is overkill.
 

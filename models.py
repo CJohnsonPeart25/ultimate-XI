@@ -14,7 +14,7 @@ CATEGORIES: dict[str, list[str]] = {
     "technical": ["passing", "shooting", "dribbling", "tackling", "interceptions"],
     "mental": ["positioning", "vision", "aggression", "composure"],
     "goalkeeping": ["reflexes", "handling", "positioning_gk", "distribution"],
-    "hidden": ["consistency", "injury_proneness"],
+    "hidden": ["consistency", "injury_resilience"],
 }
 STAT_FIELDS = [stat for stats in CATEGORIES.values() for stat in stats]
 
@@ -72,6 +72,12 @@ def view_axis_keys(view: str) -> list[str]:
 
 
 class Player(SQLModel, table=True):
+    # Streamlit's file-watcher re-executes this module on save, but SQLModel's
+    # metadata lives in the cached sqlmodel package and survives the reload —
+    # so re-registering the table would raise "already defined". The schema is
+    # identical each time, so allowing redefinition is safe.
+    __table_args__ = {"extend_existing": True}
+
     name: str = Field(primary_key=True)
 
     pace: float
@@ -96,7 +102,7 @@ class Player(SQLModel, table=True):
     distribution: float
 
     consistency: float
-    injury_proneness: float
+    injury_resilience: float
 
     link_up_partners: list[str] = Field(default_factory=list, sa_column=Column(JSON))
 
@@ -123,6 +129,8 @@ class Player(SQLModel, table=True):
 
 
 class PositionWeight(SQLModel, table=True):
+    __table_args__ = {"extend_existing": True}
+
     position: str = Field(primary_key=True)
     stat: str = Field(primary_key=True)
     weight: float

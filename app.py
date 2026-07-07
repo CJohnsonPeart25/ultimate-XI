@@ -1,3 +1,6 @@
+import pandas  # noqa: F401  # eager: force a clean pandas import at startup so
+# plotly's lazy pd.Series check never triggers a first-time import mid hot-reload
+# (which surfaces as "partially initialized module 'pandas'").
 import streamlit as st
 
 from chart import build_radar, build_team_radar, pretty
@@ -49,8 +52,7 @@ def compare_page(players: dict[str, Player]) -> None:
         st.info("Pick at least one character in the sidebar to compare.")
         return
 
-    st.plotly_chart(build_radar(players, selected, view),
-                    use_container_width=True)
+    st.plotly_chart(build_radar(players, selected, view), width="stretch")
 
     weights = load_position_weights()
 
@@ -108,7 +110,7 @@ def weights_page() -> None:
     st.title("Ultimate XI — Edit Position Weights")
     st.caption(
         "Relative importance of each stat for a Position. Magnitudes are free — "
-        "Fit normalizes by their sum. Higher = matters more."
+        "Fit normalizes by their sum. Higher = matters more; 0 = no impact."
     )
 
     weights = load_position_weights()
@@ -117,16 +119,17 @@ def weights_page() -> None:
 
     with st.form("edit_weights", clear_on_submit=False):
         new_weights: dict[str, float] = {}
-        stats = sorted(current, key=lambda s: current[s], reverse=True)
-        cols = st.columns(3)
-        for i, stat in enumerate(stats):
-            new_weights[stat] = cols[i % 3].number_input(
-                pretty(stat),
-                min_value=0.0,
-                step=WEIGHT_STEP,
-                value=float(current[stat]),
-                key=f"weight_{position}_{stat}",
-            )
+        for category, stats in CATEGORIES.items():
+            st.markdown(f"**{pretty(category)}**")
+            cols = st.columns(len(stats))
+            for col, stat in zip(cols, stats):
+                new_weights[stat] = col.number_input(
+                    pretty(stat),
+                    min_value=0.0,
+                    step=WEIGHT_STEP,
+                    value=float(current.get(stat, 0.0)),
+                    key=f"weight_{position}_{stat}",
+                )
         submitted = st.form_submit_button("Save", type="primary")
 
     if submitted:
@@ -267,7 +270,7 @@ def compare_teams_page(players: dict[str, Player]) -> None:
         st.info(f"Dead level overall ({overall_a:.2f}).")
 
     st.plotly_chart(build_team_radar({label_a: means_a, label_b: means_b}),
-                    use_container_width=True)
+                    width="stretch")
 
     rows = [
         {"Position": pretty(pos), label_a: round(means_a[pos], 2),
@@ -325,6 +328,46 @@ def _simulation_section(doc_a, doc_b, players, weights, label_a, label_b) -> Non
     )
 
 
+def _view_metrics(view: str) -> dict[str, callable]:
+    """Metric label → function(Player) -> float for a Players view.
+
+    Overall shows the global Overall plus each category average (like the
+    radar's Overall); a category shows just that category's stats.
+    """
+    if view == OVERALL_VIEW:
+        metrics: dict[str, callable] = {"Overall": lambda p: p.overall}
+        for cat in CATEGORIES:
+            metrics[f"{pretty(cat)}-Overall"] = lambda p, c=cat: p.category_overall(c)
+        return metrics
+    return {pretty(stat): (lambda p, s=stat: getattr(p, s)) for stat in CATEGORIES[view]}
+
+
+def players_page(players: dict[str, Player]) -> None:
+    st.title("Ultimate XI — Players")
+    st.caption("Every player ranked. Pick a view: Overall shows category "
+               "averages, a category shows its individual stats.")
+
+    view_options = [OVERALL_VIEW] + [pretty(c) for c in CATEGORIES]
+    label_to_key = {pretty(c): c for c in CATEGORIES}
+
+    view_label = st.selectbox("View", view_options)
+    view = OVERALL_VIEW if view_label == OVERALL_VIEW else label_to_key[view_label]
+    st.caption("Click a column header to sort.")
+
+    metrics = _view_metrics(view)
+    headline = next(iter(metrics.values()))
+    ranked = sorted(players.values(), key=headline, reverse=True)
+
+    rows = []
+    for player in ranked:
+        row = {"Player": pretty(player.name)}
+        for label, fn in metrics.items():
+            row[label] = round(fn(player), 2)
+        rows.append(row)
+
+    st.dataframe(rows, width="stretch", hide_index=True)
+
+
 def main() -> None:
     st.set_page_config(page_title="Ultimate XI", layout="wide")
     players = load_players()
@@ -332,13 +375,15 @@ def main() -> None:
     with st.sidebar:
         page = st.radio(
             "Page",
-            ["Compare", "Team builder", "Team vs Team",
+            ["Compare", "Players", "Team builder", "Team vs Team",
              "Edit ratings", "Edit weights"],
             index=0,
         )
 
     if page == "Compare":
         compare_page(players)
+    elif page == "Players":
+        players_page(players)
     elif page == "Team builder":
         team_builder_page(players)
     elif page == "Team vs Team":

@@ -20,7 +20,7 @@ page. Vocabulary per CONTEXT.md (Character, Position, Fit, Team, Placement).
   "simplicity wins". The coarse four-Position model is the everyday tool.
 - **009 — full stochastic match engine:** deferred. M1+M2 already give a scoreline
   and probabilities at a fraction of the complexity. This stays the long-term
-  endpoint the hidden Stats (consistency/aggression/injury_proneness) were built for.
+  endpoint the hidden Stats (consistency/aggression/injury_resilience) were built for.
 
 Both are ready-to-pick-up issues; nothing about the current design blocks them.
 

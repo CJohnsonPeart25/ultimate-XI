@@ -10,7 +10,7 @@ database, seeded with sensible default weights for each of the four Positions
 `Fit(character, position)` as a **normalized weighted blend** of the Character's
 Stats — `sum(weight * stat) / sum(weights)` — so Fit lands on the same 0–5 scale
 regardless of the raw weight numbers. Hidden Stats (`consistency`,
-`injury_proneness`) never contribute to Fit.
+`injury_resilience`) never contribute to Fit.
 
 Surface the result: show each Character's four Fit scores on the existing Compare
 page. Add a weights-editor page (mirroring the existing ratings editor) that edits

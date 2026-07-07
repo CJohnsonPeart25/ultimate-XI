@@ -39,5 +39,5 @@ shared persistence, migrations, or concurrency handling.
   a full **stochastic match engine (L1)** — see issues 008/009. These were
   consciously deferred in favour of simplicity; the current xG+Poisson model is the
   intended everyday tool. The `state_template.yaml` stats (consistency = variance,
-  aggression → fouls, injury_proneness) remain the design target for L1 if it is
+  aggression → fouls, injury_resilience) remain the design target for L1 if it is
   ever picked up.

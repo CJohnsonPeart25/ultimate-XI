@@ -17,7 +17,7 @@ epic-team-vs-team-simulation
 Deferred long-term endpoint. Simulate a match event-by-event (possession →
 chances → shots → saves → goals), driving each event off line Fit and chemistry,
 with the hidden Stats finally in play: `consistency` as per-match variance,
-`aggression` → fouls/cards, `injury_proneness` → injuries. Aggregate many seeded
+`aggression` → fouls/cards, low `injury_resilience` → injuries. Aggregate many seeded
 Monte Carlo runs into outcome probabilities. A Markov-chain / possession-flow
 variant (L1a) is the lighter fallback if full event simulation is too costly.
 
@@ -28,7 +28,7 @@ OOTP engines and Monte Carlo match simulation (see docs/research/team-comparison
 
 - [ ] Decision recorded: full event engine vs Markov (L1a) variant
 - [ ] Seeded RNG so runs are reproducible
-- [ ] Hidden Stats (consistency, aggression, injury_proneness) drive simulated events
+- [ ] Hidden Stats (consistency, aggression, injury_resilience) drive simulated events
 - [ ] Monte Carlo aggregation yields outcome probabilities consistent with M1/M2
 - [ ] Dedicated module with a strong test harness
 

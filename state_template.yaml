@@ -48,8 +48,8 @@ goalkeeping:
 hidden:
   consistency:
     description: "Random variance modifier applied before each match."
-  injury_proneness:
-    description: "Probability check triggered during heavy tackles or depleted stamina."
+  injury_resilience:
+    description: "Resistance to injury (higher = better) during heavy tackles or depleted stamina."
 
 # 6. Synergies
 synergies:
