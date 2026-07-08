@@ -5,8 +5,9 @@ of *when* things happen, or *who*. This module spreads that same xG across 90
 minutes as a Poisson process, then resolves each shot against the actual
 Players involved — who takes it (weighted by shooting/pace/dribbling) and
 whether it beats the keeper (shooter's shooting/composure vs keeper's
-reflexes/handling) — so the Team vs Team page can play the match out like a
-basic football-manager live tracker.
+reflexes/handling) — plus corners, throw-ins, fouls and offsides for flavour,
+so the Team vs Team page can play the match out like a basic
+football-manager live tracker.
 """
 import random
 from dataclasses import dataclass, field
@@ -19,11 +20,19 @@ FULL_TIME = 90
 HALF_TIME = 45
 SHOTS_PER_GOAL = 5.5  # flavour anchor: shots fire ~5.5x as often as goals
 
+# Per-team, per-minute odds of each flavour event firing.
+CORNER_RATE = 0.07
+THROW_IN_RATE = 0.10
+FOUL_RATE = 0.09
+OFFSIDE_RATE = 0.03
+YELLOW_CARD_BASE = 0.15  # scaled by the fouler's aggression once a foul happens
+
 
 @dataclass
 class MatchEvent:
     minute: int
-    kind: str  # "kickoff" | "chance" | "goal" | "half-time" | "full-time"
+    kind: str  # "kickoff"|"chance"|"goal"|"corner"|"throw-in"|"foul"|"yellow-card"|
+               # "offside"|"half-time"|"full-time"
     team: str | None  # "a" | "b" | None
     text: str
 
@@ -45,17 +54,19 @@ def _clamp(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
 
 
-def _attacking_pool(doc) -> list[str]:
-    attackers = [p.character for p in doc.placements if p.position == "attack"]
-    return attackers or [p.character for p in doc.placements if p.position != "goalkeeper"]
+def _outfield(doc, positions: tuple[str, ...] | None = None) -> list[str]:
+    """Characters placed in `positions` (or any non-goalkeeper slot as a fallback)."""
+    if positions is not None:
+        pool = [p.character for p in doc.placements if p.position in positions]
+        if pool:
+            return pool
+    return [p.character for p in doc.placements if p.position != "goalkeeper"]
 
 
-def _pick_shooter(doc, players: dict[str, Player], rng: random.Random) -> Player:
-    """Weighted by attacking threat, so a team's best finisher gets more shots."""
-    pool = _attacking_pool(doc)
-    threats = [max(0.1, players[c].shooting * 2 + players[c].pace + players[c].dribbling)
-              for c in pool]
-    return players[rng.choices(pool, weights=threats)[0]]
+def _weighted_pick(pool: list[str], players: dict[str, Player], weight_fn,
+                   rng: random.Random) -> Player:
+    weights = [max(0.1, weight_fn(players[c])) for c in pool]
+    return players[rng.choices(pool, weights=weights)[0]]
 
 
 def _keeper(doc, players: dict[str, Player]) -> Player | None:
@@ -66,7 +77,8 @@ def _keeper(doc, players: dict[str, Player]) -> Player | None:
 def _resolve_shot(minute: int, team: str, doc, opp_doc, players: dict[str, Player],
                   base_conversion: float, rng: random.Random) -> MatchEvent:
     """Pick a shooter, then decide goal vs save from their stats against the keeper's."""
-    shooter = _pick_shooter(doc, players, rng)
+    shooter = _weighted_pick(_outfield(doc, ("attack",)), players,
+                             lambda p: p.shooting * 2 + p.pace + p.dribbling, rng)
     keeper = _keeper(opp_doc, players)
 
     conversion = base_conversion
@@ -84,6 +96,38 @@ def _resolve_shot(minute: int, team: str, doc, opp_doc, players: dict[str, Playe
                       f"Chance for {shooter_name} — saved{keeper_name}!")
 
 
+def _minor_events(minute: int, team: str, doc, opp_doc, players: dict[str, Player],
+                  rng: random.Random) -> list[MatchEvent]:
+    """Corners, throw-ins, fouls (with a chance of a yellow) and offsides for one team."""
+    events: list[MatchEvent] = []
+    team_label = doc.name or ("Team A" if team == "a" else "Team B")
+
+    if rng.random() < CORNER_RATE:
+        events.append(MatchEvent(minute, "corner", team, f"Corner for {team_label}."))
+
+    if rng.random() < THROW_IN_RATE:
+        events.append(MatchEvent(minute, "throw-in", team, f"Throw-in for {team_label}."))
+
+    if rng.random() < OFFSIDE_RATE:
+        attacker = _weighted_pick(_outfield(doc, ("attack",)), players,
+                                  lambda p: p.pace, rng)
+        events.append(MatchEvent(minute, "offside", team,
+                                 f"Offside — {pretty(attacker.name)} was caught out."))
+
+    if rng.random() < FOUL_RATE:
+        fouler = _weighted_pick(_outfield(opp_doc, ("defence", "midfield")), players,
+                                lambda p: p.aggression * 1.5 + p.tackling, rng)
+        victim = _weighted_pick(_outfield(doc, ("attack",)), players,
+                                lambda p: p.shooting + p.pace + p.dribbling, rng)
+        events.append(MatchEvent(minute, "foul", team,
+                                 f"Foul by {pretty(fouler.name)} on {pretty(victim.name)}."))
+        if rng.random() < _clamp(YELLOW_CARD_BASE * (fouler.aggression / 3), 0.0, 0.9):
+            events.append(MatchEvent(minute, "yellow-card", team,
+                                     f"Yellow card for {pretty(fouler.name)}."))
+
+    return events
+
+
 def generate_match(doc_a, doc_b, players: dict[str, Player], a: TeamStrength,
                     b: TeamStrength, xg_a: float, xg_b: float,
                     seed: int | None = None) -> list[MinuteState]:
@@ -91,14 +135,19 @@ def generate_match(doc_a, doc_b, players: dict[str, Player], a: TeamStrength,
     rng = random.Random(seed)
     goal_rate_a, goal_rate_b = xg_a / FULL_TIME, xg_b / FULL_TIME
     shot_rate_a, shot_rate_b = goal_rate_a * SHOTS_PER_GOAL, goal_rate_b * SHOTS_PER_GOAL
-    base_conversion_a, base_conversion_b = 1 / SHOTS_PER_GOAL, 1 / SHOTS_PER_GOAL
+    base_conversion = 1 / SHOTS_PER_GOAL
+
+    sides = {
+        "a": {"doc": doc_a, "opp": doc_b, "shot_rate": shot_rate_a},
+        "b": {"doc": doc_b, "opp": doc_a, "shot_rate": shot_rate_b},
+    }
 
     # Possession tilts with the gap in Attack rating, then drifts minute to minute.
     base_possession_a = 50 + (a.attack - b.attack) * 12
     possession_a = _clamp(base_possession_a, 20.0, 80.0)
 
-    score_a = score_b = 0
-    passes_a = passes_b = 0
+    score = {"a": 0, "b": 0}
+    passes = {"a": 0, "b": 0}
     timeline: list[MinuteState] = []
 
     kickoff = MatchEvent(0, "kickoff", None, "Kick-off!")
@@ -107,21 +156,18 @@ def generate_match(doc_a, doc_b, players: dict[str, Player], a: TeamStrength,
 
         possession_a += rng.uniform(-3.0, 3.0)
         possession_a = _clamp(possession_a, 20.0, 80.0)
-        passes_a += round(rng.uniform(6, 10) * (possession_a / 50))
-        passes_b += round(rng.uniform(6, 10) * ((100 - possession_a) / 50))
+        passes["a"] += round(rng.uniform(6, 10) * (possession_a / 50))
+        passes["b"] += round(rng.uniform(6, 10) * ((100 - possession_a) / 50))
 
-        if rng.random() < shot_rate_a:
-            event = _resolve_shot(minute, "a", doc_a, doc_b, players,
-                                  base_conversion_a, rng)
-            if event.kind == "goal":
-                score_a += 1
-            events.append(event)
-        if rng.random() < shot_rate_b:
-            event = _resolve_shot(minute, "b", doc_b, doc_a, players,
-                                  base_conversion_b, rng)
-            if event.kind == "goal":
-                score_b += 1
-            events.append(event)
+        for team, side in sides.items():
+            if rng.random() < side["shot_rate"]:
+                event = _resolve_shot(minute, team, side["doc"], side["opp"], players,
+                                      base_conversion, rng)
+                if event.kind == "goal":
+                    score[team] += 1
+                events.append(event)
+            events.extend(_minor_events(minute, team, side["doc"], side["opp"],
+                                        players, rng))
 
         if minute == HALF_TIME:
             events.append(MatchEvent(minute, "half-time", None, "Half-time."))
@@ -129,9 +175,9 @@ def generate_match(doc_a, doc_b, players: dict[str, Player], a: TeamStrength,
             events.append(MatchEvent(minute, "full-time", None, "Full-time!"))
 
         timeline.append(MinuteState(
-            minute=minute, score_a=score_a, score_b=score_b,
+            minute=minute, score_a=score["a"], score_b=score["b"],
             possession_a=possession_a, shots_a=0, shots_b=0,
-            passes_a=passes_a, passes_b=passes_b, events=events,
+            passes_a=passes["a"], passes_b=passes["b"], events=events,
         ))
 
     # Backfill cumulative shot counts (kept separate from the event loop above

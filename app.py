@@ -343,7 +343,9 @@ def _simulation_section(doc_a, doc_b, players, weights, label_a, label_b) -> Non
 def _live_match_section(doc_a, doc_b, players, label_a, label_b, result) -> None:
     st.subheader("Live match")
     st.caption("Plays one sampled 90-minute match consistent with the xG above — "
-               "same model, one realised outcome. Purely for flavour, not a forecast.")
+               "goals, corners, throw-ins, fouls, offsides and cards, all drawn from "
+               "the players' own stats. One realised outcome, purely for flavour, "
+               "not a forecast.")
 
     speed = st.select_slider("Speed", options=["Slow", "Normal", "Fast", "Instant"],
                              value="Normal", key="live_speed")
@@ -353,6 +355,13 @@ def _live_match_section(doc_a, doc_b, players, label_a, label_b, result) -> None
         timeline = generate_match(doc_a, doc_b, players, result.a, result.b,
                                   result.xg_a, result.xg_b)
         _play_match(timeline, label_a, label_b, delay)
+
+
+_EVENT_ICONS = {
+    "kickoff": "🏁", "goal": "⚽", "chance": "🧤", "corner": "🚩",
+    "throw-in": "↩️", "foul": "🟧", "yellow-card": "🟨", "offside": "🚫",
+    "half-time": "⏸️", "full-time": "🏁",
+}
 
 
 def _play_match(timeline, label_a: str, label_b: str, delay: float) -> None:
@@ -365,7 +374,8 @@ def _play_match(timeline, label_a: str, label_b: str, delay: float) -> None:
     log_lines: list[str] = []
     for state in timeline:
         for ev in state.events:
-            log_lines.append(f"**{ev.minute}'** {ev.text}")
+            icon = _EVENT_ICONS.get(ev.kind, "")
+            log_lines.append(f"**{ev.minute}'** {icon} {ev.text}")
 
         clock_ph.markdown(f"### ⏱️ {state.minute}'")
         score_ph.markdown(f"## {label_a} **{state.score_a}** – **{state.score_b}** {label_b}")
@@ -383,7 +393,7 @@ def _play_match(timeline, label_a: str, label_b: str, delay: float) -> None:
             c3.metric(f"{label_a} passes", state.passes_a)
             c4.metric(f"{label_b} passes", state.passes_b)
 
-        log_ph.markdown("\n\n".join(reversed(log_lines[-8:])))
+        log_ph.markdown("\n\n".join(reversed(log_lines[-12:])))
 
         if delay:
             time.sleep(delay)
