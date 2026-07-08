@@ -1,4 +1,5 @@
 import random
+import time
 
 import pandas  # noqa: F401  # eager: force a clean pandas import at startup so
 # plotly's lazy pd.Series check never triggers a first-time import mid hot-reload
@@ -21,6 +22,7 @@ from models import (
     update_player,
     update_position_weights,
 )
+from match_engine import generate_match
 from simulation import MAX_GOALS, SimParams, simulate
 from team import (
     Placement,
@@ -334,7 +336,57 @@ def _simulation_section(doc_a, doc_b, players, weights, label_a, label_b) -> Non
         f"({result.b.chemistry_links} link-ups)"
     )
 
+    _live_match_section(doc_a, doc_b, players, label_a, label_b, result)
     _maths_expander(params)
+
+
+def _live_match_section(doc_a, doc_b, players, label_a, label_b, result) -> None:
+    st.subheader("Live match")
+    st.caption("Plays one sampled 90-minute match consistent with the xG above — "
+               "same model, one realised outcome. Purely for flavour, not a forecast.")
+
+    speed = st.select_slider("Speed", options=["Slow", "Normal", "Fast", "Instant"],
+                             value="Normal", key="live_speed")
+    delay = {"Slow": 0.2, "Normal": 0.08, "Fast": 0.02, "Instant": 0.0}[speed]
+
+    if st.button("Kick off ⚽", key="kickoff_btn"):
+        timeline = generate_match(doc_a, doc_b, players, result.a, result.b,
+                                  result.xg_a, result.xg_b)
+        _play_match(timeline, label_a, label_b, delay)
+
+
+def _play_match(timeline, label_a: str, label_b: str, delay: float) -> None:
+    clock_ph = st.empty()
+    score_ph = st.empty()
+    poss_ph = st.empty()
+    stats_ph = st.empty()
+    log_ph = st.empty()
+
+    log_lines: list[str] = []
+    for state in timeline:
+        for ev in state.events:
+            log_lines.append(f"**{ev.minute}'** {ev.text}")
+
+        clock_ph.markdown(f"### ⏱️ {state.minute}'")
+        score_ph.markdown(f"## {label_a} **{state.score_a}** – **{state.score_b}** {label_b}")
+
+        poss_a = state.possession_a
+        with poss_ph.container():
+            st.caption(f"Possession — {label_a} {poss_a:.0f}% · "
+                      f"{label_b} {100 - poss_a:.0f}%")
+            st.progress(poss_a / 100)
+
+        with stats_ph.container():
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric(f"{label_a} shots", state.shots_a)
+            c2.metric(f"{label_b} shots", state.shots_b)
+            c3.metric(f"{label_a} passes", state.passes_a)
+            c4.metric(f"{label_b} passes", state.passes_b)
+
+        log_ph.markdown("\n\n".join(reversed(log_lines[-8:])))
+
+        if delay:
+            time.sleep(delay)
 
 
 def _maths_expander(params: SimParams) -> None:
