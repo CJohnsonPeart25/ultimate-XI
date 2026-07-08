@@ -369,7 +369,8 @@ def _play_match(timeline, label_a: str, label_b: str, delay: float) -> None:
     score_ph = st.empty()
     poss_ph = st.empty()
     stats_ph = st.empty()
-    log_ph = st.empty()
+    st.caption("Match commentary — scroll to review any moment once the game's done.")
+    log_ph = st.container(height=320).empty()
 
     log_lines: list[str] = []
     for state in timeline:
@@ -393,7 +394,7 @@ def _play_match(timeline, label_a: str, label_b: str, delay: float) -> None:
             c3.metric(f"{label_a} passes", state.passes_a)
             c4.metric(f"{label_b} passes", state.passes_b)
 
-        log_ph.markdown("\n\n".join(reversed(log_lines[-12:])))
+        log_ph.markdown("\n\n".join(reversed(log_lines)))
 
         if delay:
             time.sleep(delay)
